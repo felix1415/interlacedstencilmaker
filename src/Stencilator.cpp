@@ -18,8 +18,12 @@ namespace cics
 
     }
 
-    int Stencilator::execute()
+    int Stencilator::execute(const bool debug)
     {
+        if(debug)
+        {
+            return 1;
+        }
         return 0;
     }
 

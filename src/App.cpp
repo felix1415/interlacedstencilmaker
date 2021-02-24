@@ -59,7 +59,7 @@ namespace cics
         return Stencilator(result["width"].as<uint16_t>(), 
                            result["height"].as<uint16_t>(), 
                            result["input"].as<std::string>(), 
-                           outputPrefix).execute();
+                           outputPrefix).execute(result["width"].as<std::string>());
     }
 
     std::string App::getDefaultOutputFolder()

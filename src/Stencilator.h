@@ -9,7 +9,7 @@ namespace cics
     {
         public:
             Stencilator(const uint16_t width, const uint16_t height, const std::string &inputFile, const std::string & outputFile);
-            int execute();
+            int execute(const bool debug);
 
         private:
             uint16_t m_width;
