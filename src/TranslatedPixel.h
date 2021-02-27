@@ -10,6 +10,7 @@ class TranslatedPixel : public Pixel
         TranslatedPixel();
 
         int getColorValue(const bitmap_image::color_plane color) const override;
+        std::string toString() const;
 
     private:
         Pixel::Colors m_translatedColors;

@@ -6,14 +6,12 @@
 #include <iostream>
 #include <sstream>
 
-namespace cics
+Tile::Tile(std::vector<Pixel> & pixels, const int steps):
+m_pixel(std::move(pixels), steps),
+m_steps(steps)
 {
-    Tile::Tile(std::vector<Pixel> & pixels, const int steps):
-    m_pixel(std::move(pixels), steps),
-    m_steps(steps)
-    {
-        // printf("HERE: \n");
-    }
+    // printf("HERE: \n");
+}
 
     // void TranslatedPixel::calculateTileColorValues(const Pixel::Colors & colorMap)
     // {
@@ -42,5 +40,3 @@ namespace cics
     // {
 
     // }
-
-}
