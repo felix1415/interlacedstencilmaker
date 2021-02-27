@@ -76,7 +76,65 @@ UTEST(TranslatedPixel, singlePixelSingleColor) {
     //Values are translated using the steps value
     ASSERT_EQ(strength, tp.getColorValue(bitmap_image::color_plane::red_plane));
     ASSERT_EQ(0, tp.getColorValue(bitmap_image::color_plane::green_plane));
-    ASSERT_EQ(0, tp.getColorValue(bitmap_image::color_plane::green_plane));
+    ASSERT_EQ(0, tp.getColorValue(bitmap_image::color_plane::blue_plane));
+    ASSERT_TRUE(1);
+}
+
+UTEST(TranslatedPixel, singlePixelMultiColor) {
+    TranslatedPixel tp;
+
+    rgb_t color;
+    color.red = 100;
+    color.green = 50;
+    color.blue = 200;
+
+    int steps = 5;
+
+    Pixel p(1, 1, color);
+    std::vector<Pixel> pixels;
+    pixels.push_back(p);
+
+    tp = TranslatedPixel(std::move(pixels), steps);
+
+    uint8_t redStrength = 0;
+    uint8_t blueStrength = 0;
+    uint8_t greenStrength = 0;
+    {
+        float fractionValue = (float)color.red/ 255;
+        ASSERT_GT(fractionValue, 0);
+        ASSERT_LT(fractionValue, 1);
+        redStrength = (int)round(fractionValue * steps);
+    }
+
+    {
+        float fractionValue = (float)color.green/ 255;
+        ASSERT_GT(fractionValue, 0);
+        ASSERT_LT(fractionValue, 1);
+        greenStrength = (int)round(fractionValue * steps);
+    }
+
+    {
+        float fractionValue = (float)color.blue/ 255;
+        ASSERT_GT(fractionValue, 0);
+        ASSERT_LT(fractionValue, 1);
+        blueStrength = (int)round(fractionValue * steps);
+    }
+
+    ASSERT_GT(redStrength, 0);
+    ASSERT_LT(redStrength, steps);
+    ASSERT_GT(greenStrength, 0);
+    ASSERT_LT(greenStrength, steps);
+    ASSERT_GT(blueStrength, 0);
+    ASSERT_LT(blueStrength, steps);
+
+    ASSERT_EQ(2, redStrength);
+    ASSERT_EQ(1, greenStrength);
+    ASSERT_EQ(4, blueStrength);
+
+    //Values are translated using the steps value
+    ASSERT_EQ(redStrength, tp.getColorValue(bitmap_image::color_plane::red_plane));
+    ASSERT_EQ(greenStrength, tp.getColorValue(bitmap_image::color_plane::green_plane));
+    ASSERT_EQ(blueStrength, tp.getColorValue(bitmap_image::color_plane::blue_plane));
     ASSERT_TRUE(1);
 }
 

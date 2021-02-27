@@ -12,14 +12,10 @@ Pixel(pixels[0]), // just use the first one to get the colors array populated
 m_pixels(pixels),
 m_steps(steps)
 {
-    printf("tile:  x: %d  y:%d\n",getX(), getY());
     //translate a group of pixels into a single pixel using the 
     //average value of each color
-    printf("HERE: \n");
     const Pixel::Colors & colors = getColorArray();
-    printf("HERE colors: \n");
 
-    printf("HERE colors: %d \n", colors.size());
 
     // for(auto& color : colors)
     for(size_t i = 0; i < colors.size(); i++)
@@ -49,9 +45,6 @@ m_steps(steps)
         printf("Color %d     is value %d\n", i, calculatedValue);
 
         m_translatedColors[i] = calculatedValue;
-
-
-        // return;
     }
 }
 
