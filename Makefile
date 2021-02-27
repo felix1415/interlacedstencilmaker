@@ -1,14 +1,13 @@
-# set non-optional compiler flags here
 CXXFLAGS += -std=c++11 -Wall -Wextra -Iinclude
 
-SOURCES := $(shell find . -name '*.cpp')
+SOURCES := main.cpp $(shell find src/ -name '*.cpp')
 HEADERS := $(shell find . -name '*.h')
 
 OUTPUT := stencil_maker
 
 all: $(OUTPUT)
 
-$(OUTPUT): $(SOURCES) $(HEADERS)
+$(OUTPUT): $(SOURCES) $(HEADERS) $(INCLUDES)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $(OUTPUT) $(SOURCES)
 
 clean:
