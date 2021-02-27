@@ -11,6 +11,7 @@ class Pixel
 
     public:
         Pixel(const uint16_t x, const uint16_t y, const rgb_t color);
+        Pixel();
 
         uint16_t getX() const;
         uint16_t getY() const; 

@@ -3,6 +3,10 @@
 #include "Pixel.h"
 #include <bitmap_image.hpp>
 
+Pixel::Pixel()
+{
+}
+
 Pixel::Pixel(const uint16_t x, const uint16_t y, const rgb_t color):
 m_xPos(x),
 m_yPos(y),

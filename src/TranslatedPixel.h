@@ -7,9 +7,7 @@ class TranslatedPixel : Pixel
 {
     public:
         TranslatedPixel(std::vector<Pixel> && pixels, const int steps);
-
-    private:
-        void calculateSteps();
+        TranslatedPixel();
 
     private:
         Pixel::Colors m_translatedColors;

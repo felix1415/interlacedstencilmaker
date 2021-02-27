@@ -2,6 +2,11 @@
 
 #include "TranslatedPixel.h"
 
+TranslatedPixel::TranslatedPixel():
+Pixel()
+{
+}
+
 TranslatedPixel::TranslatedPixel(std::vector<Pixel> && pixels, const int steps):
 Pixel(pixels[0]), // just use the first one to get the colors array populated
 m_pixels(pixels),
