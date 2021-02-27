@@ -1,3 +1,5 @@
+//Copyright (c) 2021 Alex Gray
+
 #include <iostream>
 #include "src/SingleTile.h"
 #include "src/App.h"
