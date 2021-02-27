@@ -2,10 +2,11 @@
 
 #include "App.h"
 #include "Stencilator.h"
+#include "Utils.h"
+#include <cxxopts.hpp>
 #include <ctime>
 #include <iostream>
 #include <sstream>
-#include <cxxopts.hpp>
 
 namespace cics
 {
@@ -22,7 +23,7 @@ namespace cics
               ("w,width", "Width of image", cxxopts::value<uint16_t>())
               ("h,height", "Height of image", cxxopts::value<uint16_t>())
               ("i,input", "Input file", cxxopts::value<std::string>())
-              ("o,output", "Output folder", cxxopts::value<std::string>() )
+              ("o,output", "Output folder", cxxopts::value<std::string>())
               ;
         }
         catch(const cxxopts::OptionSpecException & e)
@@ -51,22 +52,23 @@ namespace cics
         }
 
         std::string outputPrefix = getDefaultOutputFolder();
-        if(not result.count("output"))
+        if(result.count("output"))
         {
             outputPrefix = result["output"].as<std::string>();
         }
 
         return Stencilator(result["width"].as<uint16_t>(), 
                            result["height"].as<uint16_t>(), 
-                           result["input"].as<std::string>(), 
-                           outputPrefix).execute(result["width"].as<std::string>());
+                           result["input"].as<std::string>(),
+                           outputPrefix,
+                           result["debug"].as<bool>()
+                           ).execute();
     }
 
     std::string App::getDefaultOutputFolder()
     {
         time_t t = time(0); 
         struct tm * timeStruct = localtime(&t);
-
         std::ostringstream ss;
 
         ss << "ISM_Output";
