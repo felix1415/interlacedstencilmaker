@@ -53,16 +53,16 @@ namespace cics
 
 
         // unsigned int total_number_of_pixels = 0;
-        int testx = 2;
-        int testy = 2;
+        int testx = 4;
+        int testy = 1;
 
         std::vector<Tile> tiles;
 
         size_t y = 0;
         size_t x = 0;
-        while(y < testx)
+        while(y < testy)
         {
-            while(x < testy)
+            while(x < testx)
             {
                 std::vector<Pixel> pixels = getPixels(pixelsPerSlot, image, x, y);
                 Tile tile(pixels, steps);
@@ -73,21 +73,28 @@ namespace cics
         }
 
 
-
-        for (std::size_t y = 0; y < m_plateHeight; ++y)
+        std::vector<Stencil> stencils;
+        for(const auto color : colors)
         {
-            for (std::size_t x = 0; x < m_plateWidth; ++x)
+            for(const auto type : types)
             {
-
-                // if(x < 2)
-                // {
-                //     Pixel p (x, y, color);
-                //     pixels.push_back(p);
-
-                // if (color.red >= 111)
-                //     total_number_of_pixels++;
+                Stencil stencil(tiles, color, type);
+                stencils.push_back(stencil);
+                printf("%s\n", stencil.toString().c_str());
             }
         }
+
+
+
+        // for (std::size_t y = 0; y < m_plateHeight; ++y)
+        // {
+        //     for (std::size_t x = 0; x < m_plateWidth; ++x)
+        //     {
+        //         std::vector<Pixel> pixels = getPixels(pixelsPerSlot, image, x, y);
+        //         Tile tile(pixels, steps);
+        //         tiles.push_back(tile);
+        //     }
+        // }
 
 
 

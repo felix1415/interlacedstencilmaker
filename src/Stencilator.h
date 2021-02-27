@@ -2,6 +2,7 @@
 
 #pragma once
 #include "Pixel.h"
+#include "Stencil.h"
 #include <bitmap_image.hpp>
 #include <iostream>
 #include <string>
@@ -9,6 +10,12 @@
 
 namespace cics
 {
+    static const bitmap_image::color_plane colors[] = { bitmap_image::color_plane::blue_plane, 
+                                                        bitmap_image::color_plane::green_plane, 
+                                                        bitmap_image::color_plane::red_plane };
+
+    static const Stencil::stencilType types[] = { Stencil::stencilType::top, Stencil::stencilType::bottom };
+
     class Stencilator
     {
         public:
