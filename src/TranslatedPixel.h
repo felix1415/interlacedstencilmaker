@@ -3,11 +3,13 @@
 #include "Pixel.h"
 #include <bitmap_image.hpp>
 
-class TranslatedPixel : Pixel
+class TranslatedPixel : public Pixel
 {
     public:
         TranslatedPixel(std::vector<Pixel> && pixels, const int steps);
         TranslatedPixel();
+
+        int getColorValue(const bitmap_image::color_plane color) const override;
 
     private:
         Pixel::Colors m_translatedColors;

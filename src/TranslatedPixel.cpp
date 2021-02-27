@@ -37,14 +37,14 @@ m_steps(steps)
 
         //
         float averageValue = (float)accumaltiveValue / numberOfPixels;
-        float decimalValue = 255 / averageValue;
+        float fractionValue = averageValue / 255;
 
-        uint8_t calculatedValue = (int)round(decimalValue * m_steps); //
+        uint8_t calculatedValue = (int)round(fractionValue * m_steps); 
 
         // printf("numberOfPixels %d\n",numberOfPixels);
         // printf("accumaltiveValue %d\n",accumaltiveValue);
         // printf("averageValue %d\n",averageValue);
-        // printf("decimalValue %f\n",decimalValue);
+        // printf("fractionValue %f\n",fractionValue);
         // printf("calculatedValue %d\n",calculatedValue);
         printf("Color %d     is value %d\n", i, calculatedValue);
 
@@ -53,4 +53,9 @@ m_steps(steps)
 
         // return;
     }
+}
+
+int TranslatedPixel::getColorValue(const bitmap_image::color_plane color) const
+{
+    return m_translatedColors[color];
 }

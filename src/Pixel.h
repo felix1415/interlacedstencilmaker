@@ -15,7 +15,7 @@ class Pixel
 
         uint16_t getX() const;
         uint16_t getY() const; 
-        int getColorValue(const bitmap_image::color_plane color) const;
+        virtual int getColorValue(const bitmap_image::color_plane color) const;
 
     protected:
         const rgb_t & getColor() const;
