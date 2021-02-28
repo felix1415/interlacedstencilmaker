@@ -15,15 +15,18 @@ UTEST(TranslatedPixel, basic) {
     std::vector<Pixel> pixels;
     pixels.push_back(p);
 
-    tp = TranslatedPixel(std::move(pixels), 5);
+    int steps = 5;
+    float tileSizeMM = 1.0f;
+
+    tp = TranslatedPixel(std::move(pixels), steps, tileSizeMM);
 
     ASSERT_EQ(tp.getX(), 10);
     ASSERT_EQ(tp.getY(), 15);
 
     //Values are translated using the steps value
-    ASSERT_NE(20, tp.getColorValue(bitmap_image::color_plane::red_plane));
-    ASSERT_NE(30, tp.getColorValue(bitmap_image::color_plane::green_plane));
-    ASSERT_NE(40, tp.getColorValue(bitmap_image::color_plane::blue_plane));
+    ASSERT_NE(20, (int)tp.getTranslatedColorValue(bitmap_image::color_plane::red_plane));
+    ASSERT_NE(30, (int)tp.getTranslatedColorValue(bitmap_image::color_plane::green_plane));
+    ASSERT_NE(40, (int)tp.getTranslatedColorValue(bitmap_image::color_plane::blue_plane));
 }
 
 UTEST(TranslatedPixel, basicEmpty) {
@@ -38,14 +41,17 @@ UTEST(TranslatedPixel, basicEmpty) {
     std::vector<Pixel> pixels;
     pixels.push_back(p);
 
-    tp = TranslatedPixel(std::move(pixels), 5);
+    int steps = 0;
+    float tileSizeMM = 0.0f;
+
+    tp = TranslatedPixel(std::move(pixels), steps, tileSizeMM);
 
     ASSERT_EQ(tp.getX(), 0);
     ASSERT_EQ(tp.getY(), 0);
 
-    ASSERT_EQ(0, tp.getColorValue(bitmap_image::color_plane::red_plane));
-    ASSERT_EQ(0, tp.getColorValue(bitmap_image::color_plane::green_plane));
-    ASSERT_EQ(0, tp.getColorValue(bitmap_image::color_plane::blue_plane));
+    ASSERT_EQ(0.0f, tp.getTranslatedColorValue(bitmap_image::color_plane::red_plane));
+    ASSERT_EQ(0.0f, tp.getTranslatedColorValue(bitmap_image::color_plane::green_plane));
+    ASSERT_EQ(0.0f, tp.getTranslatedColorValue(bitmap_image::color_plane::blue_plane));
 }
 
 UTEST(TranslatedPixel, singlePixelSingleColor) {
@@ -57,27 +63,29 @@ UTEST(TranslatedPixel, singlePixelSingleColor) {
     color.blue = 0;
 
     int steps = 5;
+    float tileSizeMM = 1.0f;
 
     Pixel p(1, 1, color);
     std::vector<Pixel> pixels;
     pixels.push_back(p);
 
-    tp = TranslatedPixel(std::move(pixels), steps);
+    tp = TranslatedPixel(std::move(pixels), steps, tileSizeMM);
 
     //value of 20 out of 255 possible values
     float fractionValue = (float)color.red/ 255;
     ASSERT_GT(fractionValue, 0);
     ASSERT_LT(fractionValue, 1);
-    uint8_t strength = (int)round(fractionValue * steps);
+    uint8_t stepValue = (int)round(fractionValue * steps);
 
-    ASSERT_GT(strength, 0);
-    ASSERT_LT(strength, steps);
+    float calculatedStrengthValue = (tileSizeMM/steps) * stepValue;
+
+    ASSERT_GT(stepValue, 0);
+    ASSERT_LT(stepValue, steps);
 
     //Values are translated using the steps value
-    ASSERT_EQ(strength, tp.getColorValue(bitmap_image::color_plane::red_plane));
-    ASSERT_EQ(0, tp.getColorValue(bitmap_image::color_plane::green_plane));
-    ASSERT_EQ(0, tp.getColorValue(bitmap_image::color_plane::blue_plane));
-    ASSERT_TRUE(1);
+    ASSERT_EQ(calculatedStrengthValue, tp.getTranslatedColorValue(bitmap_image::color_plane::red_plane));
+    ASSERT_EQ(0, tp.getTranslatedColorValue(bitmap_image::color_plane::green_plane));
+    ASSERT_EQ(0, tp.getTranslatedColorValue(bitmap_image::color_plane::blue_plane));
 }
 
 UTEST(TranslatedPixel, singlePixelMultiColor) {
@@ -89,53 +97,60 @@ UTEST(TranslatedPixel, singlePixelMultiColor) {
     color.blue = 200;
 
     int steps = 5;
+    float tileSizeMM = 1.0f;
 
     Pixel p(1, 1, color);
     std::vector<Pixel> pixels;
     pixels.push_back(p);
 
-    tp = TranslatedPixel(std::move(pixels), steps);
+    tp = TranslatedPixel(std::move(pixels), steps, tileSizeMM);
 
-    uint8_t redStrength = 0;
-    uint8_t blueStrength = 0;
-    uint8_t greenStrength = 0;
+    uint8_t redStepValue = 0;
+    float redCalculatedStrengthValue = 0;
+    uint8_t greenStepValue = 0;
+    float greenCalculatedStrengthValue = 0;
+    uint8_t blueStepValue = 0;
+    float blueCalculatedStrengthValue = 0;
+
     {
         float fractionValue = (float)color.red/ 255;
         ASSERT_GT(fractionValue, 0);
         ASSERT_LT(fractionValue, 1);
-        redStrength = (int)round(fractionValue * steps);
+        redStepValue = (int)round(fractionValue * steps);
+        redCalculatedStrengthValue = (tileSizeMM/steps) * redStepValue;
     }
 
     {
         float fractionValue = (float)color.green/ 255;
         ASSERT_GT(fractionValue, 0);
         ASSERT_LT(fractionValue, 1);
-        greenStrength = (int)round(fractionValue * steps);
+        greenStepValue = (int)round(fractionValue * steps);
+        greenCalculatedStrengthValue = (tileSizeMM/steps) * greenStepValue;
     }
 
     {
         float fractionValue = (float)color.blue/ 255;
         ASSERT_GT(fractionValue, 0);
         ASSERT_LT(fractionValue, 1);
-        blueStrength = (int)round(fractionValue * steps);
+        blueStepValue = (int)round(fractionValue * steps);
+        blueCalculatedStrengthValue = (tileSizeMM/steps) * blueStepValue;
     }
 
-    ASSERT_GT(redStrength, 0);
-    ASSERT_LT(redStrength, steps);
-    ASSERT_GT(greenStrength, 0);
-    ASSERT_LT(greenStrength, steps);
-    ASSERT_GT(blueStrength, 0);
-    ASSERT_LT(blueStrength, steps);
+    ASSERT_GT(redStepValue, 0);
+    ASSERT_LT(redStepValue, steps);
+    ASSERT_GT(greenStepValue, 0);
+    ASSERT_LT(greenStepValue, steps);
+    ASSERT_GT(blueStepValue, 0);
+    ASSERT_LT(blueStepValue, steps);
 
-    ASSERT_EQ(2, redStrength);
-    ASSERT_EQ(1, greenStrength);
-    ASSERT_EQ(4, blueStrength);
+    ASSERT_EQ(0.4f, redCalculatedStrengthValue);
+    ASSERT_EQ(0.2f, greenCalculatedStrengthValue);
+    ASSERT_EQ(0.8f, blueCalculatedStrengthValue);
 
     //Values are translated using the steps value
-    ASSERT_EQ(redStrength, tp.getColorValue(bitmap_image::color_plane::red_plane));
-    ASSERT_EQ(greenStrength, tp.getColorValue(bitmap_image::color_plane::green_plane));
-    ASSERT_EQ(blueStrength, tp.getColorValue(bitmap_image::color_plane::blue_plane));
-    ASSERT_TRUE(1);
+    ASSERT_EQ(redCalculatedStrengthValue, tp.getTranslatedColorValue(bitmap_image::color_plane::red_plane));
+    ASSERT_EQ(greenCalculatedStrengthValue, tp.getTranslatedColorValue(bitmap_image::color_plane::green_plane));
+    ASSERT_EQ(blueCalculatedStrengthValue, tp.getTranslatedColorValue(bitmap_image::color_plane::blue_plane));
 }
 
 UTEST(TranslatedPixel, twoPixelSingleColor) {
@@ -152,6 +167,7 @@ UTEST(TranslatedPixel, twoPixelSingleColor) {
     colorTwo.blue = 0;
 
     int steps = 5;
+    float tileSizeMM = 1.0f;
 
     Pixel p1(1, 1, colorOne);
     Pixel p2(1, 2, colorTwo);
@@ -159,7 +175,7 @@ UTEST(TranslatedPixel, twoPixelSingleColor) {
     pixels.push_back(p1);
     pixels.push_back(p2);
 
-    tp = TranslatedPixel(std::move(pixels), steps);
+    tp = TranslatedPixel(std::move(pixels), steps, tileSizeMM);
 
     //200+100 = 280; 300/2 = 150 - 5 steps = 3 strength
     float average = (float)(colorOne.red + colorTwo.red) / 2;
@@ -167,15 +183,15 @@ UTEST(TranslatedPixel, twoPixelSingleColor) {
     float fractionValue = average/ 255;
     ASSERT_GT(fractionValue, 0);
     ASSERT_LT(fractionValue, 1);
-    uint8_t strength = (int)round(fractionValue * steps);
+    uint8_t stepValue = (int)round(fractionValue * steps);
+    float calculatedStrengthValue = (tileSizeMM/steps) * stepValue;
 
-    ASSERT_GT(strength, 0);
-    ASSERT_LT(strength, steps);
+    ASSERT_GT(stepValue, 0);
+    ASSERT_LT(stepValue, steps);
 
-    ASSERT_EQ(3, tp.getColorValue(bitmap_image::color_plane::red_plane));
+
     //Values are translated using the steps value
-    ASSERT_EQ(strength, tp.getColorValue(bitmap_image::color_plane::red_plane));
-    ASSERT_EQ(0, tp.getColorValue(bitmap_image::color_plane::green_plane));
-    ASSERT_EQ(0, tp.getColorValue(bitmap_image::color_plane::green_plane));
-    ASSERT_TRUE(1);
+    ASSERT_EQ(calculatedStrengthValue, tp.getTranslatedColorValue(bitmap_image::color_plane::red_plane));
+    ASSERT_EQ(0, tp.getTranslatedColorValue(bitmap_image::color_plane::green_plane));
+    ASSERT_EQ(0, tp.getTranslatedColorValue(bitmap_image::color_plane::blue_plane));
 }

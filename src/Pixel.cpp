@@ -8,8 +8,7 @@ Pixel::Pixel()
 }
 
 Pixel::Pixel(const uint16_t x, const uint16_t y, const rgb_t color):
-m_xPos(x),
-m_yPos(y),
+Position(x, y),
 m_color(color)
 {
     m_colorArray[bitmap_image::color_plane::red_plane] = (int)m_color.red;
@@ -30,14 +29,4 @@ const rgb_t & Pixel::getColor() const
 const Pixel::Colors & Pixel::getColorArray() const
 {
     return m_colorArray;
-}
-
-uint16_t Pixel::getX() const
-{
-    return m_xPos; 
-}
-
-uint16_t Pixel::getY() const
-{
-    return m_yPos; 
 }

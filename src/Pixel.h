@@ -1,10 +1,11 @@
 //Copyright (c) 2021 Alex Gray
 
 #pragma once
+#include "Position.h"
 #include <bitmap_image.hpp>
 #include <map>
 
-class Pixel
+class Pixel : public Position
 {
     public:
         typedef std::array<int, 3> Colors;
@@ -13,20 +14,16 @@ class Pixel
         Pixel(const uint16_t x, const uint16_t y, const rgb_t color);
         Pixel();
 
-        uint16_t getX() const;
-        uint16_t getY() const; 
-        virtual int getColorValue(const bitmap_image::color_plane color) const;
+        int getColorValue(const bitmap_image::color_plane color) const;
+        const Colors & getColorArray() const;
 
     protected:
         const rgb_t & getColor() const;
-        const Colors & getColorArray() const;
-
+        
     private:
         void calculateTranslatedColourValue();
 
     private:
-        uint16_t m_xPos;
-        uint16_t m_yPos;
         Colors m_colorArray;
         rgb_t m_color;
 };
