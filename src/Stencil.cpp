@@ -4,12 +4,22 @@
 #include "Stencil.h"
 #include "Utils.h"
 
-Stencil::Stencil(std::vector<Tile> & tiles, const bitmap_image::color_plane color, const Stencil::stencilType type):
+Stencil::Stencil(std::vector<Tile> & tiles, const bitmap_image::color_plane color, const Stencil::stencilType type, const Position & bounds):
 m_tiles(tiles),
 m_color(color),
 m_type(type)
 {
+    int xOuterTilesSize = ((bounds.getX() + 2) / 2) * ((bounds.getY() + 2) / 2);
+    m_vertices.reserve((INNER_TILE_VERTS * m_tiles.size()) + xOuterTilesSize); // 8 vertices * 3 colors
+    m_faces.reserve((INNER_TILE_FACES * m_tiles.size()) + xOuterTilesSize);
+}
 
+void Stencil::process()
+{
+    for(const auto & tile : m_tiles)
+    {
+        OBJData tileData = tile.getOBJData(m_objectNumberGenerator);
+    }
 }
 
 std::string Stencil::toString() const

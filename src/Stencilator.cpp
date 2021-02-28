@@ -2,6 +2,7 @@
 
 #include "Stencilator.h"
 #include "Tile.h"
+#include "Position.h"
 #include <tuple>
 #include <iostream>
 #include <sstream>
@@ -51,12 +52,13 @@ namespace cics
             printf("steps: %d\n",steps);
         }
 
-
         // unsigned int total_number_of_pixels = 0;
         int testx = 4;
         int testy = 1;
 
         std::vector<Tile> tiles;
+
+        int objectNumbers = 0;
 
         size_t y = 0;
         size_t x = 0;
@@ -65,7 +67,8 @@ namespace cics
             while(x < testx)
             {
                 std::vector<Pixel> pixels = getPixels(pixelsPerSlot, image, x, y);
-                Tile tile(pixels, steps);
+                TranslatedPixel tp(std::move(pixels), steps, tileSizeMM);
+                Tile tile(std::move(tp));
                 tiles.push_back(tile);
                 x += pixelsPerSlot;
             }
@@ -74,15 +77,18 @@ namespace cics
 
 
         std::vector<Stencil> stencils;
+        Position bounds(testx, testy);
         for(const auto color : colors)
         {
             for(const auto type : types)
             {
-                Stencil stencil(tiles, color, type);
+                Stencil stencil(tiles, color, type, bounds);
                 stencils.push_back(stencil);
                 printf("%s\n", stencil.toString().c_str());
             }
         }
+
+        stencils[0].process();
 
 
 
