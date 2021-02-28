@@ -1,5 +1,5 @@
 //Copyright (c) 2021 Alex Gray
-
+#pragma once
 #include <bitmap_image.hpp>
 
 class Utils
