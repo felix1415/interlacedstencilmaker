@@ -3,7 +3,7 @@
 #pragma once
 #include "Position.h"
 #include <bitmap_image.hpp>
-#include <map>
+#include <array>
 
 class Pixel : public Position
 {

@@ -2,6 +2,7 @@
 #pragma once
 #include "Pixel.h"
 #include <bitmap_image.hpp>
+#include <vector>
 
 class TranslatedPixel : public Pixel
 {
