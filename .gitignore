@@ -1,4 +1,5 @@
 stencil_maker
 *.bmp
+*.obj
 test/ism_test 
 
