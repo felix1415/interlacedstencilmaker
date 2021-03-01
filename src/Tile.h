@@ -37,17 +37,20 @@ class Tile : public Position
         void calculateTranslatedColourValue() = delete;
 
         virtual OBJData getOBJData(const bitmap_image::color_plane color, int & faceStartingNumber) const;
+        virtual std::string toString() const;
 
-    private:
-        std::vector<vertices> getVertices(float xStart, float xEnd, float yStart, float yEnd) const;
+    protected:
+        std::vector<vertices> getVertices(float xStart, float xEnd, float yStart, float yEnd, const bool buffer = false) const;
         std::vector<faces> getFaces(int & faceStartingNumber) const;
 
         // OBJTile
 
-        
+    
     private:
         TranslatedPixel m_translatedPixel;
+    protected:
         const float m_tileSizeMM;
+    private:
         const TileType m_type;
 
 };

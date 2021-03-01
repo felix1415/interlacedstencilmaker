@@ -35,23 +35,26 @@ std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(const bitma
     float xEnd = m_tileSizeMM / 3;
     float yStart = 0.0f; // always 0, only end will change (pixel strength)
     float yEnd = 0.0f; // strength of color
+    
 
     const size_t numberOfColors = m_translatedPixel.getColorArray().size();
     // for(const auto & color : m_translatedPixel.getColorArray())
     for(size_t i = 0; i < numberOfColors; i++)
     {
+        bool buffer = false;
         //y height is always the length of the tile, unless the TP has a 
         //value to reduce it (allowing color through)
         if(((bitmap_image::color_plane)i == color))
         {
             yEnd = (m_tileSizeMM - m_translatedPixel.getTranslatedColorValue((bitmap_image::color_plane)i));
+            buffer = true;
         }
         else
         {
             yEnd = m_tileSizeMM;
         }
         
-        std::vector<vertices> colorVerts = getVertices(xStart, xEnd, yStart, yEnd);
+        std::vector<vertices> colorVerts = getVertices(xStart, xEnd, yStart, yEnd, buffer);
         verticesVec.insert(std::end(verticesVec), std::begin(colorVerts), std::end(colorVerts));
         
         //next color prep
@@ -65,17 +68,32 @@ std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(const bitma
     return std::make_pair(verticesVec, facesVec);
 }
 
-std::vector<vertices> Tile::getVertices(float xStart, float xEnd, float yStart, float yEnd) const
+std::vector<vertices> Tile::getVertices(float xStart, float xEnd, float yStart, float yEnd, const bool buffer) const
 {
+    float bufferVal = m_tileSizeMM * 0.2f;
+
+    if(buffer)
+    {
+        //10% increase either side
+        if(not ((yEnd - yStart) == m_tileSizeMM))
+        {
+            xStart = xStart + bufferVal;
+            xEnd = xEnd - bufferVal;
+        }
+    }
+
+    float xVert = ((float)getX() * m_tileSizeMM);
+    float yVert = ((float)getY() * m_tileSizeMM);
+
     std::vector<vertices> verticesToReturn = {
-        {(float)getX() * m_tileSizeMM + xStart,     (float)getY() + yStart,      0},
-        {(float)getX() * m_tileSizeMM + xEnd,       (float)getY() + yStart,      0},
-        {(float)getX() * m_tileSizeMM + xEnd,       (float)getY() + yEnd,        0},
-        {(float)getX() * m_tileSizeMM + xStart,     (float)getY() + yEnd,        0},
-        {(float)getX() * m_tileSizeMM + xStart,     (float)getY() + yStart,      0.6},
-        {(float)getX() * m_tileSizeMM + xEnd,       (float)getY() + yStart,      0.6},
-        {(float)getX() * m_tileSizeMM + xEnd,       (float)getY() + yEnd,        0.6},
-        {(float)getX() * m_tileSizeMM + xStart,     (float)getY() + yEnd,        0.6},
+        {xVert + xStart,     yVert + yStart,      0},
+        {xVert + xEnd,       yVert + yStart,      0},
+        {xVert + xEnd,       yVert + yEnd,        0},
+        {xVert + xStart,     yVert + yEnd,        0},
+        {xVert + xStart,     yVert + yStart,      0.12},
+        {xVert + xEnd,       yVert + yStart,      0.12},
+        {xVert + xEnd,       yVert + yEnd,        0.12},
+        {xVert + xStart,     yVert + yEnd,        0.12},
     };
 
     return verticesToReturn;
@@ -95,4 +113,11 @@ std::vector<faces> Tile::getFaces(int & faceStartingNumber) const
     faceStartingNumber += 8;
 
     return facesToReturn;
+}
+
+std::string Tile::toString() const
+{
+    std::ostringstream ss;
+    ss << "Tile - x:" << getX() << " y:" << getY();
+    return ss.str();
 }

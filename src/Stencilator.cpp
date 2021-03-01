@@ -53,8 +53,8 @@ namespace cics
         }
 
         // unsigned int total_number_of_pixels = 0;
-        int testx = 4;
-        int testy = 1;
+        int testx = 10;
+        int testy = 5;
 
         std::vector<Tile> tiles;
 
@@ -69,7 +69,10 @@ namespace cics
                 Tile tile(std::move(tp));
                 tiles.push_back(tile);
                 x += pixelsPerSlot;
+
+                std::cout << "x: " << x << " y: " << y << std::endl;
             }
+            x = 0;
             y += pixelsPerSlot;
         }
 
@@ -80,7 +83,7 @@ namespace cics
         {
             for(const auto type : types)
             {
-                Stencil stencil(tiles, color, type, bounds);
+                Stencil stencil(tiles, color, type, bounds, tileSizeMM);
                 stencils.push_back(stencil);
                 printf("%s\n", stencil.toString().c_str());
             }
