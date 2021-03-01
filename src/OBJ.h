@@ -33,6 +33,8 @@ class OBJ
         {
             std::ofstream objFile;
 
+            std::remove(outputFile.c_str());
+
             try
             {
                 objFile.open (outputFile);

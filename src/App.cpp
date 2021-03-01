@@ -72,7 +72,7 @@ namespace cics
         std::ostringstream ss;
 
         ss << "ISM_Output";
-        ss << "_" << timeStruct->tm_hour << "_" << timeStruct->tm_min << "_" << timeStruct->tm_sec;
+        // ss << "_" << timeStruct->tm_hour << "_" << timeStruct->tm_min << "_" << timeStruct->tm_sec;
 
         return ss.str();
     }
