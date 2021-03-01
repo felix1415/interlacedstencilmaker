@@ -1,12 +1,12 @@
 //Copyright (c) 2021 Alex Gray
 
 #pragma once
-#include "ObjectNumberGenerator.h"
 #include "TranslatedPixel.h"
 #include "Position.h"
 #include "OBJ.h"
 #include <iostream>
 #include <string>
+#include <vector>
 
 enum TileType
 {
@@ -16,9 +16,7 @@ enum TileType
 };
 
 const static int INNER_TILE_VERTS = 8 * 3;
-const static int INNER_TILE_FACES = 12 * 3;
-
-typedef std::pair<std::vector<vertices>,std::vector<faces>> OBJData;
+const static int INNER_TILE_FACES = 6 * 3;
 
 /* Tile will generate the obj values for the space it is to occupy in 
 the stencil based on the strength of the colour it is representing. 
@@ -38,18 +36,18 @@ class Tile : public Position
         const rgb_t & getColor() const = delete;
         void calculateTranslatedColourValue() = delete;
 
-        virtual OBJData getOBJData(ObjectNumberGenerator & objNumGen) const;
+        virtual OBJData getOBJData(const bitmap_image::color_plane color, int & faceStartingNumber) const;
 
     private:
         std::vector<vertices> getVertices(float xStart, float xEnd, float yStart, float yEnd) const;
-        std::vector<faces> getFaces(const int objNumber) const;
+        std::vector<faces> getFaces(int & faceStartingNumber) const;
 
         // OBJTile
 
         
     private:
         TranslatedPixel m_translatedPixel;
-        float m_tileSizeMM;
-        TileType m_type;
+        const float m_tileSizeMM;
+        const TileType m_type;
 
 };

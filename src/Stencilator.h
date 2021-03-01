@@ -6,6 +6,7 @@
 #include <bitmap_image.hpp>
 #include <iostream>
 #include <string>
+#include <vector>
 
 
 namespace cics

@@ -16,10 +16,30 @@ m_type(type)
 
 void Stencil::process()
 {
-    for(const auto & tile : m_tiles)
+    int faceStartingNumber = 0;
+    // for(const auto & tile : m_tiles)
+    for(size_t i = 0; i < m_tiles.size(); i++)
     {
-        OBJData tileData = tile.getOBJData(m_objectNumberGenerator);
+        OBJData tileData;
+        // if(m_tiles[i].getY() % (stencilType::top + 1))
+        {
+            tileData = m_tiles[i].getOBJData(m_color, faceStartingNumber); // top is even tiles
+        }
+
+        m_vertices.insert(std::end(m_vertices), std::begin(tileData.first), std::end(tileData.first));
+
+        m_faces.insert(std::end(m_faces), std::begin(tileData.second), std::end(tileData.second));
     }
+
+    //add outer tiles
+}
+
+void Stencil::output(const std::string outputFile)
+{
+    std::ostringstream ss;
+    ss << outputFile << "_" << stencilTypeToString(m_type) << "_" << Utils::colorToString(m_color) << ".obj";
+
+    OBJ::writeOBJFile(ss.str(), m_vertices, m_faces);
 }
 
 std::string Stencil::toString() const

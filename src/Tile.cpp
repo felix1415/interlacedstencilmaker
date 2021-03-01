@@ -1,6 +1,7 @@
 //Copyright (c) 2021 Alex Gray
 
 #include "Tile.h"
+#include "Utils.h"
 #include <bitmap_image.hpp>
 #include <math.h>
 #include <iostream>
@@ -24,7 +25,7 @@ m_type(TileType::borderTile)
 {
 }
 
-std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(ObjectNumberGenerator & objNumGen) const
+std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(const bitmap_image::color_plane color, int & faceStartingNumber) const
 {
     std::vector<vertices> verticesVec;
     std::vector<faces> facesVec;
@@ -39,13 +40,25 @@ std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(ObjectNumbe
     // for(const auto & color : m_translatedPixel.getColorArray())
     for(size_t i = 0; i < numberOfColors; i++)
     {
-        yEnd = m_translatedPixel.getTranslatedColorValue((bitmap_image::color_plane)i);
+        //y height is always the length of the tile, unless the TP has a 
+        //value to reduce it (allowing color through)
+        if(((bitmap_image::color_plane)i == color))
+        {
+            yEnd = (m_tileSizeMM - m_translatedPixel.getTranslatedColorValue((bitmap_image::color_plane)i));
+        }
+        else
+        {
+            yEnd = m_tileSizeMM;
+        }
+        
         std::vector<vertices> colorVerts = getVertices(xStart, xEnd, yStart, yEnd);
         verticesVec.insert(std::end(verticesVec), std::begin(colorVerts), std::end(colorVerts));
-        xStart += xEnd;
-        xEnd += xEnd;
+        
+        //next color prep
+        xStart = xEnd;
+        xEnd += m_tileSizeMM / 3;
 
-        std::vector<faces> colorFaces = getFaces(objNumGen.nextValue());
+        std::vector<faces> colorFaces = getFaces(faceStartingNumber);
         facesVec.insert(std::end(facesVec), std::begin(colorFaces), std::end(colorFaces));
     }
 
@@ -55,73 +68,31 @@ std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(ObjectNumbe
 std::vector<vertices> Tile::getVertices(float xStart, float xEnd, float yStart, float yEnd) const
 {
     std::vector<vertices> verticesToReturn = {
-        {(float)getX() + xEnd,     (float)getY() + yEnd,      0.6},
-        {(float)getX() + xEnd,     (float)getY() + yEnd,      0},
-        {(float)getX() + xStart,   (float)getY() + yStart,    0.6},
-        {(float)getX() + xStart,   (float)getY() + yStart,    0},
-        {(float)getX() + xStart,   (float)getY() + yEnd,      0},
-        {(float)getX() + xStart,   (float)getY() + yEnd,      0.6},
-        {(float)getX() + xEnd,     (float)getY() + yStart,    0},
-        {(float)getX() + xEnd,     (float)getY() + yStart,    0.6},
+        {(float)getX() * m_tileSizeMM + xStart,     (float)getY() + yStart,      0},
+        {(float)getX() * m_tileSizeMM + xEnd,       (float)getY() + yStart,      0},
+        {(float)getX() * m_tileSizeMM + xEnd,       (float)getY() + yEnd,        0},
+        {(float)getX() * m_tileSizeMM + xStart,     (float)getY() + yEnd,        0},
+        {(float)getX() * m_tileSizeMM + xStart,     (float)getY() + yStart,      0.6},
+        {(float)getX() * m_tileSizeMM + xEnd,       (float)getY() + yStart,      0.6},
+        {(float)getX() * m_tileSizeMM + xEnd,       (float)getY() + yEnd,        0.6},
+        {(float)getX() * m_tileSizeMM + xStart,     (float)getY() + yEnd,        0.6},
     };
 
     return verticesToReturn;
 }
 
-std::vector<faces> Tile::getFaces(const int objNumber) const
+std::vector<faces> Tile::getFaces(int & faceStartingNumber) const
 {
     std::vector<faces> facesToReturn = {
-        {uint16_t(1+objNumber), uint16_t(2+objNumber), uint16_t(3+objNumber)},
-        {uint16_t(1+objNumber), uint16_t(3+objNumber), uint16_t(4+objNumber)},
-        {uint16_t(5+objNumber), uint16_t(6+objNumber), uint16_t(7+objNumber)},
-        {uint16_t(5+objNumber), uint16_t(7+objNumber), uint16_t(8+objNumber)},
-        {uint16_t(5+objNumber), uint16_t(8+objNumber), uint16_t(1+objNumber)},
-        {uint16_t(7+objNumber), uint16_t(6+objNumber), uint16_t(3+objNumber)},
-        {uint16_t(8+objNumber), uint16_t(7+objNumber), uint16_t(1+objNumber)},
-        {uint16_t(5+objNumber), uint16_t(3+objNumber), uint16_t(6+objNumber)},
-        {uint16_t(4+objNumber), uint16_t(5+objNumber), uint16_t(1+objNumber)},
-        {uint16_t(4+objNumber), uint16_t(3+objNumber), uint16_t(5+objNumber)},
-        {uint16_t(2+objNumber), uint16_t(7+objNumber), uint16_t(3+objNumber)},
-        {uint16_t(1+objNumber), uint16_t(7+objNumber), uint16_t(1+objNumber)},
+        {uint16_t(1+faceStartingNumber), uint16_t(2+faceStartingNumber), uint16_t(3+faceStartingNumber), uint16_t(4+faceStartingNumber)},
+        {uint16_t(5+faceStartingNumber), uint16_t(6+faceStartingNumber), uint16_t(7+faceStartingNumber), uint16_t(8+faceStartingNumber)},
+        {uint16_t(1+faceStartingNumber), uint16_t(2+faceStartingNumber), uint16_t(6+faceStartingNumber), uint16_t(5+faceStartingNumber)},
+        {uint16_t(2+faceStartingNumber), uint16_t(3+faceStartingNumber), uint16_t(7+faceStartingNumber), uint16_t(6+faceStartingNumber)},
+        {uint16_t(3+faceStartingNumber), uint16_t(4+faceStartingNumber), uint16_t(8+faceStartingNumber), uint16_t(7+faceStartingNumber)},
+        {uint16_t(4+faceStartingNumber), uint16_t(1+faceStartingNumber), uint16_t(5+faceStartingNumber), uint16_t(8+faceStartingNumber)},
     };
+
+    faceStartingNumber += 8;
 
     return facesToReturn;
 }
-
-    // # Object Export From Tinkercad Server 2015
-
-    // mtllib obj.mtl
-
-    // o obj_0
-    // v -80       90      1
-    // v -80       90      0
-    // v -80       100         0
-    // v -80       100         1
-    // v -100      100         1
-    // v -100      100         0
-    // v -100      90      0
-    // v -100      90      1
-    // # 8 vertices
-
-    // g group_0_15277357
-
-    // usemtl color_15277357
-    // s 0
-
-    // f 1     2   3
-    // f 1     3   4
-    // f 5     6   7
-    // f 5     7   8
-    // f 5     8   1
-    // f 7     6   3
-    // f 8     7   1
-    // f 5     3   6
-    // f 4     5   1
-    // f 4     3   5
-    // f 2     7   3
-    // f 1     7   2
-    // # 12 faces
-
-    //  #end of obj_0
-
-

@@ -58,8 +58,6 @@ namespace cics
 
         std::vector<Tile> tiles;
 
-        int objectNumbers = 0;
-
         size_t y = 0;
         size_t x = 0;
         while(y < testy)
@@ -89,6 +87,7 @@ namespace cics
         }
 
         stencils[0].process();
+        stencils[0].output(m_outputFile);
 
 
 
