@@ -1,6 +1,7 @@
 //Copyright (c) 2021 Alex Gray
 
 #include "Position.h"
+#include <sstream>
 
 Position::Position()
 {
@@ -21,3 +22,10 @@ uint16_t Position::getY() const
 {
     return m_yPos; 
 }
+
+std::string Position::toString() const
+{
+    std::ostringstream ss;
+    ss << getX() << ", " << getY();
+    return ss.str();
+}   
