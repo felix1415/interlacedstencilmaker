@@ -1,9 +1,16 @@
 //Copyright (c) 2021 Alex Gray
 
 #include "Pixel.h"
+#include "Utils.h"
 #include <bitmap_image.hpp>
+#include <sstream>
 
 Pixel::Pixel()
+{
+}
+
+Pixel::Pixel(const Position & position):
+Position(position)
 {
 }
 
@@ -30,3 +37,15 @@ const Pixel::Colors & Pixel::getColorArray() const
 {
     return m_colorArray;
 }
+
+std::string Pixel::toString() const
+{
+    std::ostringstream ss;
+    ss << Position::toString() << "\n";
+    for(size_t i = 0; i < getColorArray().size(); i++)
+    {
+        ss << "    " << Utils::colorToString(i) << ":"<< m_colorArray[i] << "\n";
+    }
+
+    return ss.str();
+}   

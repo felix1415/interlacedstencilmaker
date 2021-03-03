@@ -11,11 +11,13 @@ class Pixel : public Position
         typedef std::array<int, 3> Colors;
 
     public:
+        Pixel(const Position & position);
         Pixel(const uint16_t x, const uint16_t y, const rgb_t color);
         Pixel();
 
         int getColorValue(const bitmap_image::color_plane color) const;
         const Colors & getColorArray() const;
+        std::string toString() const;
 
     protected:
         const rgb_t & getColor() const;
