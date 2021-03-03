@@ -46,7 +46,7 @@ class OBJ
 
                 for(const auto & vert : vertices)
                 {
-                    objFile << "v " << vert.p1 *100 << "    " << vert.p2*100 << "    " << vert.p3*100 << "\n";
+                    objFile << "v " << vert.p1 << "    " << vert.p2 << "    " << vert.p3 << "\n";
                 }
                 objFile << "# " << vertices.size() << " vertices\n";
 
