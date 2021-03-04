@@ -23,7 +23,7 @@ namespace cics
               ("w,width", "Width of image", cxxopts::value<uint16_t>())
               ("h,height", "Height of image", cxxopts::value<uint16_t>())
               ("i,input", "Input file", cxxopts::value<std::string>())
-              ("o,output", "Output folder", cxxopts::value<std::string>())
+              ("o,output", "Output folder", cxxopts::value<std::string>()->default_value("ISM_Output"))
               ;
         }
         catch(const cxxopts::OptionSpecException & e)
@@ -51,29 +51,11 @@ namespace cics
             return 0;
         }
 
-        std::string outputPrefix = getDefaultOutputFolder();
-        if(result.count("output"))
-        {
-            outputPrefix = result["output"].as<std::string>();
-        }
-
         return Stencilator(result["width"].as<uint16_t>(), 
                            result["height"].as<uint16_t>(), 
                            result["input"].as<std::string>(),
-                           outputPrefix,
+                           result["output"].as<std::string>(),
                            result["debug"].as<bool>()
                            ).execute();
-    }
-
-    std::string App::getDefaultOutputFolder()
-    {
-        time_t t = time(0); 
-        struct tm * timeStruct = localtime(&t);
-        std::ostringstream ss;
-
-        ss << "ISM_Output";
-        // ss << "_" << timeStruct->tm_hour << "_" << timeStruct->tm_min << "_" << timeStruct->tm_sec;
-
-        return ss.str();
     }
 }

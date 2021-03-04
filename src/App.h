@@ -8,8 +8,5 @@ namespace cics
     {
         public:
             int run(int argc, char * argv[]);
-
-        private:
-            std::string getDefaultOutputFolder();
     };
 }
