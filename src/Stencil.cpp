@@ -29,7 +29,7 @@ void Stencil::process()
         OBJData tileData;
         if(m_tiles[i].getY() % 2 and (stencilType::top == m_type))
         {
-            std::cout << "inner top tiledata " << m_tiles[i].getX() << " " << m_tiles[i].getY() << std::endl;
+            std::cout << m_tiles[i].toString() << std::endl;
             tileData = m_tiles[i].getOBJData(m_color, faceStartingNumber); // top is even tiles
         }
         else if(not(m_tiles[i].getY() % 2) and (stencilType::bottom == m_type))
@@ -50,31 +50,26 @@ void Stencil::generateOuterTiles(int & fsNumber)
 {
     //we start a 0, inner tiles start at 1,1, we finish 1 past bounds 
     //so we have a right hand side of tiles
-    for(int x = 0; x < m_bounds.getX() + 2; x++)
+    for(int x = 0; x < m_bounds.getX() + 1; x++)
     {
         for(int y = 0; y < m_bounds.getY() + 2; y++)
         {
             OuterTile outerTile(x, y, m_tileSizeMM);
             OBJData tileData;
 
-            std::cout << outerTile.toString() << std::endl;
-
             //we will do the same conditional as in process as we are 
             //shifted by one tile to the left compared to inner tiles 
             if(not (y % 2) and (stencilType::top == m_type))
             {
-                std::cout << "tiledata" << std::endl;
                 tileData = outerTile.getOBJData(fsNumber); // top is even tiles
             }
             else if((y % 2) and (stencilType::bottom == m_type))
             {
-                std::cout << "tiledata" << std::endl;
                 tileData = outerTile.getOBJData(fsNumber); //bottom is odd tiles
             }
             else if(x == 0 or x == m_bounds.getX() + 1)
             {
-                std::cout << "tiledata x is side" << std::endl;
-                tileData = outerTile.getOBJData(fsNumber); //bottom is odd tiles
+                tileData = outerTile.getOBJData(fsNumber); //x side
             }
             else if(y == 0 or y == m_bounds.getY() + 1)
             {
