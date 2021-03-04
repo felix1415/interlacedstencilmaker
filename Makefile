@@ -1,4 +1,4 @@
-CXXFLAGS += -std=c++11 -Wall -Wextra -Iinclude
+CXXFLAGS += -std=c++11 -g  -Wall -Wextra -Iinclude
 
 SOURCES := main.cpp $(shell find src/ -name '*.cpp')
 HEADERS := $(shell find . -name '*.h')
