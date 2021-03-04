@@ -20,6 +20,14 @@ std::pair<std::vector<vertices>,std::vector<faces>> OuterTile::getOBJData(int & 
     float yStart = 0.0f;
     float yEnd = m_tileSizeMM; 
 
+
+    //give the 0,0 tile a little notch so we know how to line up the final stencil
+    if(getX() == 0 and getY() == 0)
+    {
+        yStart = m_tileSizeMM/2;
+        xStart = m_tileSizeMM/2;
+    }
+
     std::vector<vertices> otVerts = getVertices(xStart, xEnd, yStart, yEnd);
     verticesVec.insert(std::end(verticesVec), std::begin(otVerts), std::end(otVerts));
 
