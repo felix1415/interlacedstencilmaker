@@ -10,7 +10,7 @@ class TranslatedPixel : public Pixel
     typedef std::array<float, 3> Colors;
 
     public:
-        TranslatedPixel(std::vector<Pixel> && pixels, const int steps, const float tileSizeMM);
+        TranslatedPixel(const Position & position, std::vector<Pixel> && pixels, const int steps, const float tileSizeMM);
         TranslatedPixel();
 
         float getTranslatedColorValue(const bitmap_image::color_plane color) const;

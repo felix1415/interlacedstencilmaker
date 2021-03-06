@@ -23,13 +23,11 @@ void Stencil::process()
 
     generateOuterTiles(faceStartingNumber);
 
-    std::cout << "TILE SIZE: " << m_tiles.size() << std::endl;
     for(size_t i = 0; i < m_tiles.size(); i++)
     {
         OBJData tileData;
         if(m_tiles[i].getY() % 2 and (stencilType::top == m_type))
         {
-            std::cout << m_tiles[i].toString() << std::endl;
             tileData = m_tiles[i].getOBJData(m_color, faceStartingNumber); // top is even tiles
         }
         else if(not(m_tiles[i].getY() % 2) and (stencilType::bottom == m_type))
@@ -42,45 +40,80 @@ void Stencil::process()
 
         m_faces.insert(std::end(m_faces), std::begin(tileData.second), std::end(tileData.second));
     }
-
-    //add outer tiles
 }
 
 void Stencil::generateOuterTiles(int & fsNumber)
 {
-    //we start a 0, inner tiles start at 1,1, we finish 1 past bounds 
-    //so we have a right hand side of tiles
-    for(int x = 0; x < m_bounds.getX() + 1; x++)
+    //while this function was supposed to generate tiles, these are now instead of tiles. 
+    //this reduces the number of vertices as well as generation resources
+    int numberOfOuterTiles = 0;
+
+    //we might be the tile without the last row of pixels, so we don't want 
+    //to put an extra row of outertiles - it'll be unnecessary
+    int yLength = m_bounds.getY() + (m_bounds.getY() % 2)  + 1;
+    int xLength = m_bounds.getX() + 1; // this is static comparatively to y axis
+
+    //we need to create horizontal lines inbetween each row of inner tiles
+    for(int y = 0; y < yLength; y++)
     {
-        for(int y = 0; y < m_bounds.getY() + 2; y++)
+        //we will do the 0,0 point differently
+        int x = 0;
+        if(y == 0)
         {
-            OuterTile outerTile(x, y, m_tileSizeMM);
-            OBJData tileData;
-
-            //we will do the same conditional as in process as we are 
-            //shifted by one tile to the left compared to inner tiles 
-            if(not (y % 2) and (stencilType::top == m_type))
-            {
-                tileData = outerTile.getOBJData(fsNumber); // top is even tiles
-            }
-            else if((y % 2) and (stencilType::bottom == m_type))
-            {
-                tileData = outerTile.getOBJData(fsNumber); //bottom is odd tiles
-            }
-            else if(x == 0 or x == m_bounds.getX() + 1)
-            {
-                tileData = outerTile.getOBJData(fsNumber); //x side
-            }
-            else if(y == 0 or y == m_bounds.getY() + 1)
-            {
-                std::cout << "tiledata y is top/bottom" << std::endl;
-                tileData = outerTile.getOBJData(fsNumber); //bottom is odd tiles
-            }
-
-            m_vertices.insert(std::end(m_vertices), std::begin(tileData.first), std::end(tileData.first));
-
-            m_faces.insert(std::end(m_faces), std::begin(tileData.second), std::end(tileData.second));
+            x = 1;
         }
+        //y height will stay the same as tileSize, x is dependent on image width
+        OuterTile outerTile(x, y, xLength, 1, m_tileSizeMM);
+        OBJData tileData;
+
+        //we will do the same conditional as in process as we are 
+        //shifted by one tile to the left compared to inner tiles 
+        if(not (y % 2) and (stencilType::top == m_type))
+        {
+            tileData = outerTile.getOBJData(fsNumber); // top is even tiles
+        }
+        else if((y % 2) and (stencilType::bottom == m_type))
+        {
+            tileData = outerTile.getOBJData(fsNumber); //bottom is odd tiles
+        }
+        else
+        {
+            throw std::runtime_error("we are not a bottom or a top type stencil");
+        }
+
+        //cura can only handle 65k vertices by the looks of it, anything after 65k defaults to 0,0...
+        //outer tiles should be struts and not tiles now
+        m_vertices.insert(std::end(m_vertices), std::begin(tileData.first), std::end(tileData.first));
+
+        m_faces.insert(std::end(m_faces), std::begin(tileData.second), std::end(tileData.second));
+        ++numberOfOuterTiles;
+    }
+
+    {   //add left side y bar
+        OuterTile outerTile(0, 1, 1, yLength - 1, m_tileSizeMM);
+        OBJData tileData = outerTile.getOBJData(fsNumber); 
+
+        m_vertices.insert(std::end(m_vertices), std::begin(tileData.first), std::end(tileData.first));
+        m_faces.insert(std::end(m_faces), std::begin(tileData.second), std::end(tileData.second));
+        ++numberOfOuterTiles;
+    }
+
+    {   //add right side y bar
+        OuterTile outerTile(xLength, 0, 1, yLength, m_tileSizeMM);
+        OBJData tileData = outerTile.getOBJData(fsNumber); 
+
+        m_vertices.insert(std::end(m_vertices), std::begin(tileData.first), std::end(tileData.first));
+        m_faces.insert(std::end(m_faces), std::begin(tileData.second), std::end(tileData.second));
+        ++numberOfOuterTiles;
+    }
+
+    {   //add positional notch
+        OuterTile outerTile(0, 0, 1, 1, m_tileSizeMM);
+        OBJData tileData = outerTile.getOBJData(fsNumber); 
+
+        m_vertices.insert(std::end(m_vertices), std::begin(tileData.first), std::end(tileData.first));
+        m_faces.insert(std::end(m_faces), std::begin(tileData.second), std::end(tileData.second));
+        ++numberOfOuterTiles;
     }
 }
 

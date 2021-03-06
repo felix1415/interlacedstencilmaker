@@ -9,10 +9,10 @@ Pixel()
 {
 }
 
-TranslatedPixel::TranslatedPixel(std::vector<Pixel> && pixels, const int steps, const float tileSizeMM):
-Pixel(pixels[0]), // just use the first one to get the colors array populated
+TranslatedPixel::TranslatedPixel(const Position & position, std::vector<Pixel> && pixels, const int steps, const float tileSizeMM):
+Pixel(position), // just use the first one to get the colors array populated
 m_translatedColors({0,0,0}),
-m_pixels(pixels),
+m_pixels(std::move(pixels)),
 m_steps(steps),
 m_tileSizeMM(tileSizeMM)
 {
@@ -46,7 +46,6 @@ m_tileSizeMM(tileSizeMM)
 
         m_translatedColors[i] = calculatedStrengthValue;
     }
-    printf("%s\n", toString().c_str());
 }
 
 float TranslatedPixel::getTranslatedColorValue(const bitmap_image::color_plane color) const
@@ -67,6 +66,11 @@ std::string TranslatedPixel::toString() const
     for(size_t i = 0; i < m_translatedColors.size(); i++)
     {
         ss << Utils::colorToString(i) << ":"<< m_translatedColors[i] << " ";
+    }
+    ss << "\n";
+    for(const auto & pixel : m_pixels)
+    {
+        ss << "    " << pixel.toString() << "\n";
     }
     return ss.str();
 }
