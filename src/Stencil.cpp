@@ -56,7 +56,6 @@ void Stencil::generateOuterTiles(int & fsNumber)
     //we need to create horizontal lines inbetween each row of inner tiles
     for(int y = 0; y < yLength; y++)
     {
-        //we will do the 0,0 point differently
         int x = 0;
         if(y == 0)
         {
@@ -78,7 +77,7 @@ void Stencil::generateOuterTiles(int & fsNumber)
         }
         else
         {
-            throw std::runtime_error("we are not a bottom or a top type stencil");
+            continue;
         }
 
         //cura can only handle 65k vertices by the looks of it, anything after 65k defaults to 0,0...
