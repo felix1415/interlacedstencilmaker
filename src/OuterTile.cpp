@@ -3,8 +3,10 @@
 #include "OuterTile.h"
 #include <sstream>
 
-OuterTile::OuterTile(const uint16_t x, const uint16_t y, const float tileSizeMM):
-Tile(x, y, tileSizeMM)
+OuterTile::OuterTile(const uint16_t x, const uint16_t y, const uint16_t endX, const uint16_t endY, const float tileSizeMM):
+Tile(x, y, tileSizeMM),
+m_endX(endX),
+m_endY(endY)
 {
 }
 
@@ -16,10 +18,9 @@ std::pair<std::vector<vertices>,std::vector<faces>> OuterTile::getOBJData(int & 
     verticesVec.reserve(8); // 8 vertices
     facesVec.reserve(6); // 6 faces
     float xStart = 0.0f;
-    float xEnd = m_tileSizeMM;
+    float xEnd = m_endX * m_tileSizeMM;
     float yStart = 0.0f;
-    float yEnd = m_tileSizeMM; 
-
+    float yEnd = m_endY * m_tileSizeMM;  
 
     //give the 0,0 tile a little notch so we know how to line up the final stencil
     if(getX() == 0 and getY() == 0)

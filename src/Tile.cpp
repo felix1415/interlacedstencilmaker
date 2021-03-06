@@ -7,10 +7,10 @@
 #include <iostream>
 #include <sstream>
 
-Tile::Tile(TranslatedPixel && pixel):
-Position(pixel.getX() + 1, pixel.getY() + 1),
+Tile::Tile(std::unique_ptr<TranslatedPixel> && pixel):
+Position(pixel->getX() + 1, pixel->getY() + 1),
 m_translatedPixel(std::move(pixel)),
-m_tileSizeMM(pixel.getTileSizeMM()),
+m_tileSizeMM(m_translatedPixel->getTileSizeMM()),
 m_type(TileType::innerTile)
 {
     //our tile is going to fit into a large grid of tiles, if we give 
@@ -37,7 +37,7 @@ std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(const bitma
     float yEnd = 0.0f; // strength of color
     
 
-    const size_t numberOfColors = m_translatedPixel.getColorArray().size();
+    const size_t numberOfColors = m_translatedPixel->getColorArray().size();
     // for(const auto & color : m_translatedPixel.getColorArray())
     for(size_t i = 0; i < numberOfColors; i++)
     {
@@ -46,7 +46,7 @@ std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(const bitma
         //value to reduce it (allowing color through)
         if(((bitmap_image::color_plane)i == color))
         {
-            yEnd = (m_tileSizeMM - m_translatedPixel.getTranslatedColorValue((bitmap_image::color_plane)i));
+            yEnd = (m_tileSizeMM - m_translatedPixel->getTranslatedColorValue((bitmap_image::color_plane)i));
             buffer = true;
         }
         else
@@ -70,7 +70,7 @@ std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(const bitma
 
 std::vector<vertices> Tile::getVertices(float xStart, float xEnd, float yStart, float yEnd, const bool buffer) const
 {
-    float bufferVal = m_tileSizeMM * 0.2f;
+    float bufferVal = m_tileSizeMM * 0.0f;
 
     if(buffer)
     {
@@ -90,10 +90,10 @@ std::vector<vertices> Tile::getVertices(float xStart, float xEnd, float yStart, 
         {xVert + xEnd,       yVert + yStart,      0},
         {xVert + xEnd,       yVert + yEnd,        0},
         {xVert + xStart,     yVert + yEnd,        0},
-        {xVert + xStart,     yVert + yStart,      0.12},
-        {xVert + xEnd,       yVert + yStart,      0.12},
-        {xVert + xEnd,       yVert + yEnd,        0.12},
-        {xVert + xStart,     yVert + yEnd,        0.12},
+        {xVert + xStart,     yVert + yStart,      STENCIL_THICKNESS},
+        {xVert + xEnd,       yVert + yStart,      STENCIL_THICKNESS},
+        {xVert + xEnd,       yVert + yEnd,        STENCIL_THICKNESS},
+        {xVert + xStart,     yVert + yEnd,        STENCIL_THICKNESS},
     };
 
     return verticesToReturn;
@@ -102,12 +102,12 @@ std::vector<vertices> Tile::getVertices(float xStart, float xEnd, float yStart, 
 std::vector<faces> Tile::getFaces(int & faceStartingNumber) const
 {
     std::vector<faces> facesToReturn = {
-        {uint16_t(1+faceStartingNumber), uint16_t(2+faceStartingNumber), uint16_t(3+faceStartingNumber), uint16_t(4+faceStartingNumber)},
-        {uint16_t(5+faceStartingNumber), uint16_t(6+faceStartingNumber), uint16_t(7+faceStartingNumber), uint16_t(8+faceStartingNumber)},
-        {uint16_t(1+faceStartingNumber), uint16_t(2+faceStartingNumber), uint16_t(6+faceStartingNumber), uint16_t(5+faceStartingNumber)},
-        {uint16_t(2+faceStartingNumber), uint16_t(3+faceStartingNumber), uint16_t(7+faceStartingNumber), uint16_t(6+faceStartingNumber)},
-        {uint16_t(3+faceStartingNumber), uint16_t(4+faceStartingNumber), uint16_t(8+faceStartingNumber), uint16_t(7+faceStartingNumber)},
-        {uint16_t(4+faceStartingNumber), uint16_t(1+faceStartingNumber), uint16_t(5+faceStartingNumber), uint16_t(8+faceStartingNumber)},
+        {uint32_t(1+faceStartingNumber), uint32_t(2+faceStartingNumber), uint32_t(3+faceStartingNumber), uint32_t(4+faceStartingNumber)},
+        {uint32_t(5+faceStartingNumber), uint32_t(6+faceStartingNumber), uint32_t(7+faceStartingNumber), uint32_t(8+faceStartingNumber)},
+        {uint32_t(1+faceStartingNumber), uint32_t(2+faceStartingNumber), uint32_t(6+faceStartingNumber), uint32_t(5+faceStartingNumber)},
+        {uint32_t(2+faceStartingNumber), uint32_t(3+faceStartingNumber), uint32_t(7+faceStartingNumber), uint32_t(6+faceStartingNumber)},
+        {uint32_t(3+faceStartingNumber), uint32_t(4+faceStartingNumber), uint32_t(8+faceStartingNumber), uint32_t(7+faceStartingNumber)},
+        {uint32_t(4+faceStartingNumber), uint32_t(1+faceStartingNumber), uint32_t(5+faceStartingNumber), uint32_t(8+faceStartingNumber)},
     };
 
     faceStartingNumber += 8;
@@ -118,6 +118,6 @@ std::vector<faces> Tile::getFaces(int & faceStartingNumber) const
 std::string Tile::toString() const
 {
     std::ostringstream ss;
-    ss << "Tile - x:" << getX() << " y:" << getY();
+    ss << "Tile - x:" << getX() << " y:" << getY() << "\n" << m_translatedPixel->toString();
     return ss.str();
 }

@@ -17,13 +17,13 @@ struct vertices
 
 struct faces
 {
-  uint16_t   f1;
-  uint16_t   f2;
-  uint16_t   f3;
-  uint16_t   f4;
+  uint32_t   f1;
+  uint32_t   f2;
+  uint32_t   f3;
+  uint32_t   f4;
 };
 
-static const float STENCIL_THICKNESS = 1.8f;
+static const float STENCIL_THICKNESS = 0.6f;
 
 typedef std::pair<std::vector<vertices>,std::vector<faces>> OBJData;
 

@@ -7,10 +7,10 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <memory>
 
 enum TileType
 {
-    colorInner,
     innerTile,
     borderTile,
 };
@@ -26,7 +26,7 @@ class Tile : public Position
 {
 
     public: //inner grouped color tile
-        Tile(TranslatedPixel && pixel);
+        Tile(std::unique_ptr<TranslatedPixel> && pixel);
 
     protected: //outerTile
         Tile(const uint16_t x, const uint16_t y, const float m_tileSizeMM);
@@ -47,7 +47,7 @@ class Tile : public Position
 
     
     private:
-        TranslatedPixel m_translatedPixel;
+        std::unique_ptr<TranslatedPixel>  m_translatedPixel;
     protected:
         const float m_tileSizeMM;
     private:
