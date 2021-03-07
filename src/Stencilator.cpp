@@ -74,7 +74,7 @@ namespace cics
         int trueY = 0;
         int trueX = 0;
 
-        // bounds = Position(4, 5);
+        // bounds = Position(4, 4);
         const int xBoundary = bounds.getX();
         const int yBoundary = bounds.getY();
 
@@ -126,6 +126,12 @@ namespace cics
 
         stencils[0].process();
         stencils[0].output(m_outputFile);
+        // stencils[1].process();
+        // stencils[1].output(m_outputFile);
+        // stencils[2].process();
+        // stencils[2].output(m_outputFile);
+        // stencils[4].process();
+        // stencils[4].output(m_outputFile);
 
         return 0;
     }
