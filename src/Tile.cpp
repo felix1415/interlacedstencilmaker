@@ -35,7 +35,6 @@ std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(const bitma
     float xEnd = m_tileSizeMM / 3;
     float yStart = 0.0f; // always 0, only end will change (pixel strength)
     float yEnd = 0.0f; // strength of color
-    
 
     const size_t numberOfColors = m_translatedPixel->getColorArray().size();
     // for(const auto & color : m_translatedPixel.getColorArray())
@@ -52,6 +51,18 @@ std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(const bitma
         else
         {
             yEnd = m_tileSizeMM;
+            //OPTIMISATION, if we're one of the colors that aren't on this stencil, we can just 
+            //extend our width out to cover the other color that isn't on this stencil and skip
+            //the addition of the other vertices, this saves us a bunch of vertices (50%)
+            if(color == i - 1  or (color == 2 and i == 0)) 
+            {   
+                xEnd += m_tileSizeMM / 3;
+            }
+            else
+            {
+                //we're the colour being optimised for, continue
+                continue;
+            }            
         }
         
         std::vector<vertices> colorVerts = getVertices(xStart, xEnd, yStart, yEnd, buffer);
@@ -84,6 +95,15 @@ std::vector<vertices> Tile::getVertices(float xStart, float xEnd, float yStart, 
 
     float xVert = ((float)getX() * m_tileSizeMM);
     float yVert = ((float)getY() * m_tileSizeMM);
+
+    //possible optimisation - we can remove the bottom face of vertices from each inner 
+    //tile as they are always up against the outer tile (bar)
+
+    //possible optimisation - we can remove the side face of vertices from both sides 
+    //of the active color as they are always up against the blocking inner tile (bar)
+
+    //possible optimisation - we can remove the top face of vertices from the blocking 
+    //inner tile as they are always up against the outer tile (bar) bottom vertices
 
     std::vector<vertices> verticesToReturn = {
         {xVert + xStart,     yVert + yStart,      0},
