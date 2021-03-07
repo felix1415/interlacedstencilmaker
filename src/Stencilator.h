@@ -24,7 +24,7 @@ namespace cics
             int execute();
 
         private:
-            int calculateSteps(const float tileSizeMM);
+            uint16_t calculateSteps(const float tileSizeMM);
             std::tuple<float, int, Position> calculateTileGeometries(const bitmap_image & image);
             std::vector<Pixel> getPixels(const int pixelsPerSlot, const bitmap_image & image, int x, int y);
 

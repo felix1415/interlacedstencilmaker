@@ -5,11 +5,13 @@
 #include "Utils.h"
 
 TranslatedPixel::TranslatedPixel():
-Pixel()
+Pixel(),
+m_steps(0),
+m_tileSizeMM(0.0f)
 {
 }
 
-TranslatedPixel::TranslatedPixel(const Position & position, std::vector<Pixel> && pixels, const int steps, const float tileSizeMM):
+TranslatedPixel::TranslatedPixel(const Position & position, std::vector<Pixel> && pixels, const uint16_t steps, const float tileSizeMM):
 Pixel(position), // just use the first one to get the colors array populated
 m_translatedColors({0,0,0}),
 m_pixels(std::move(pixels)),
@@ -56,6 +58,11 @@ float TranslatedPixel::getTranslatedColorValue(const bitmap_image::color_plane c
 float TranslatedPixel::getTileSizeMM() const
 {
     return m_tileSizeMM;
+}
+
+uint16_t TranslatedPixel::getSteps() const
+{
+    return m_steps;
 }
 
 std::string TranslatedPixel::toString() const

@@ -40,6 +40,7 @@ std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(const bitma
     // for(const auto & color : m_translatedPixel.getColorArray())
     for(size_t i = 0; i < numberOfColors; i++)
     {
+        TileOptions tOptions = TileOptions::none;
         bool buffer = false;
         //y height is always the length of the tile, unless the TP has a 
         //value to reduce it (allowing color through)
@@ -47,6 +48,15 @@ std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(const bitma
         {
             yEnd = (m_tileSizeMM - m_translatedPixel->getTranslatedColorValue((bitmap_image::color_plane)i));
             buffer = true;
+            //if our translated color is at tileSize intensity, we can skip over it, the tile is too small to print
+            //better than a equality operation, we're asking if it's less than the smallest possible value
+            if(yEnd < (m_tileSizeMM / (m_translatedPixel->getSteps() + 1)) )
+            {
+                xStart = xEnd;
+                xEnd += m_tileSizeMM / 3;
+                tOptions = TileOptions::omitBottom;
+                continue;
+            }
         }
         else
         {
@@ -57,6 +67,7 @@ std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(const bitma
             if(color == i - 1  or (color == 2 and i == 0)) 
             {   
                 xEnd += m_tileSizeMM / 3;
+                tOptions = TileOptions::omitEnds;
             }
             else
             {
@@ -68,12 +79,12 @@ std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(const bitma
         std::vector<vertices> colorVerts = getVertices(xStart, xEnd, yStart, yEnd, buffer);
         verticesVec.insert(std::end(verticesVec), std::begin(colorVerts), std::end(colorVerts));
         
+        std::vector<faces> colorFaces = getFaces(faceStartingNumber, tOptions);
+        facesVec.insert(std::end(facesVec), std::begin(colorFaces), std::end(colorFaces));
+
         //next color prep
         xStart = xEnd;
         xEnd += m_tileSizeMM / 3;
-
-        std::vector<faces> colorFaces = getFaces(faceStartingNumber);
-        facesVec.insert(std::end(facesVec), std::begin(colorFaces), std::end(colorFaces));
     }
 
     return std::make_pair(verticesVec, facesVec);
@@ -119,16 +130,33 @@ std::vector<vertices> Tile::getVertices(float xStart, float xEnd, float yStart, 
     return verticesToReturn;
 }
 
-std::vector<faces> Tile::getFaces(int & faceStartingNumber) const
+std::vector<faces> Tile::getFaces(int & faceStartingNumber, const TileOptions tileOptions) const
 {
-    std::vector<faces> facesToReturn = {
-        {uint32_t(1+faceStartingNumber), uint32_t(2+faceStartingNumber), uint32_t(3+faceStartingNumber), uint32_t(4+faceStartingNumber)},
-        {uint32_t(5+faceStartingNumber), uint32_t(6+faceStartingNumber), uint32_t(7+faceStartingNumber), uint32_t(8+faceStartingNumber)},
-        {uint32_t(1+faceStartingNumber), uint32_t(2+faceStartingNumber), uint32_t(6+faceStartingNumber), uint32_t(5+faceStartingNumber)},
-        {uint32_t(2+faceStartingNumber), uint32_t(3+faceStartingNumber), uint32_t(7+faceStartingNumber), uint32_t(6+faceStartingNumber)},
-        {uint32_t(3+faceStartingNumber), uint32_t(4+faceStartingNumber), uint32_t(8+faceStartingNumber), uint32_t(7+faceStartingNumber)},
-        {uint32_t(4+faceStartingNumber), uint32_t(1+faceStartingNumber), uint32_t(5+faceStartingNumber), uint32_t(8+faceStartingNumber)},
-    };
+    std::vector<faces> facesToReturn;
+    facesToReturn.push_back({uint32_t(1+faceStartingNumber), uint32_t(2+faceStartingNumber), uint32_t(3+faceStartingNumber), uint32_t(4+faceStartingNumber)});
+    facesToReturn.push_back({uint32_t(5+faceStartingNumber), uint32_t(6+faceStartingNumber), uint32_t(7+faceStartingNumber), uint32_t(8+faceStartingNumber)});
+    
+
+    if(tileOptions != TileOptions::omitEnds) //we can omit this face, the outerTile will cover it always
+    {
+        // std::cout << "Removing ends from a tile" << std::endl;
+        facesToReturn.push_back({uint32_t(3+faceStartingNumber), uint32_t(4+faceStartingNumber), uint32_t(8+faceStartingNumber), uint32_t(7+faceStartingNumber)});//top
+    }
+
+    if(tileOptions != TileOptions::omitBottom and tileOptions != TileOptions::omitEnds )
+    {
+        // std::cout << "Removing bottom or ends from a tile" << std::endl;
+        facesToReturn.push_back({uint32_t(1+faceStartingNumber), uint32_t(2+faceStartingNumber), uint32_t(6+faceStartingNumber), uint32_t(5+faceStartingNumber)});//bottom
+    }
+
+    if(tileOptions != TileOptions::omitSides)
+    {
+        //both sides of the tile
+        // std::cout << "Removing both sides from a tile" << std::endl;
+        facesToReturn.push_back({uint32_t(2+faceStartingNumber), uint32_t(3+faceStartingNumber), uint32_t(7+faceStartingNumber), uint32_t(6+faceStartingNumber)}); // right side
+        facesToReturn.push_back({uint32_t(4+faceStartingNumber), uint32_t(1+faceStartingNumber), uint32_t(5+faceStartingNumber), uint32_t(8+faceStartingNumber)}); // left side    
+    }
+    
 
     faceStartingNumber += 8;
 

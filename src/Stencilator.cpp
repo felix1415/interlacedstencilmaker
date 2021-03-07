@@ -44,7 +44,7 @@ namespace cics
         std::tie(tileSizeMM, pixelsPerTile, bounds) = calculateTileGeometries(image);
 
         //calculate the number of steps we can take to make a tile smaller/larger
-        int steps = calculateSteps(tileSizeMM);
+        uint16_t steps = calculateSteps(tileSizeMM);
 
         //we need a certain number of steps to have decent resolution - having 4 is still low
         if(steps < 4)
@@ -162,7 +162,7 @@ namespace cics
         return pixels;
     }
 
-    int Stencilator::calculateSteps(const float tileSizeMM)
+    uint16_t Stencilator::calculateSteps(const float tileSizeMM)
     {
         float printerStepsMM = 0.1f;
 

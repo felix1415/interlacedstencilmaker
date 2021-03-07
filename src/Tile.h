@@ -15,6 +15,14 @@ enum TileType
     borderTile,
 };
 
+enum TileOptions
+{
+    none = 0,
+    omitSides,
+    omitBottom,
+    omitEnds,
+};
+
 const static int INNER_TILE_VERTS = 8 * 3;
 const static int INNER_TILE_FACES = 6 * 3;
 
@@ -41,7 +49,7 @@ class Tile : public Position
 
     protected:
         std::vector<vertices> getVertices(float xStart, float xEnd, float yStart, float yEnd, const bool buffer = false) const;
-        std::vector<faces> getFaces(int & faceStartingNumber) const;
+        std::vector<faces> getFaces(int & faceStartingNumber, const TileOptions tileOptions = TileOptions::none) const;
 
         // OBJTile
 
