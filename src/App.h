@@ -2,11 +2,8 @@
 #pragma once
 #include <string>
 
-namespace cics
+class App
 {
-    class App
-    {
-        public:
-            int run(int argc, char * argv[]);
-    };
-}
+    public:
+        int run(int argc, char * argv[]);
+};

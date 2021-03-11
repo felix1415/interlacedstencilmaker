@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 {
     try
     {
-        return cics::App().run(argc, argv);
+        return App().run(argc, argv);
     }
     catch(...)
     {
