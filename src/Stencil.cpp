@@ -5,12 +5,13 @@
 #include "OuterTile.h"
 #include "Utils.h"
 
-Stencil::Stencil(std::vector<Tile> & tiles, const bitmap_image::color_plane color, const Stencil::stencilType type, const Position & bounds, const float tileSizeMM):
+Stencil::Stencil(std::vector<Tile> & tiles, const bitmap_image::color_plane color, const Stencil::stencilType type, const Position & bounds, const float tileSizeMM, const bool struts):
 m_tiles(tiles),
 m_color(color),
 m_bounds(bounds),
 m_tileSizeMM(tileSizeMM),
-m_type(type)
+m_type(type),
+m_struts(struts)
 {
     int xOuterTilesSize = ((m_bounds.getX() + 2) / 2) * ((m_bounds.getY() + 2) / 2);
     m_vertices.reserve((INNER_TILE_VERTS * m_tiles.size()) + xOuterTilesSize); // 8 vertices * 3 colors
@@ -22,6 +23,11 @@ void Stencil::process()
     int faceStartingNumber = 0;
 
     generateOuterTiles(faceStartingNumber);
+
+    if(m_struts)
+    {
+        // generateStruts(faceStartingNumber);
+    }
 
     for(size_t i = 0; i < m_tiles.size(); i++)
     {

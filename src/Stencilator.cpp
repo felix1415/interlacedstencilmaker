@@ -10,13 +10,14 @@
 
 namespace cics
 {
-    Stencilator::Stencilator(const uint16_t width, const uint16_t height, const std::string &inputFile, const std::string & outputFile, const bool debug):
+    Stencilator::Stencilator(const uint16_t width, const uint16_t height, const std::string &inputFile, const std::string & outputFile, const bool debug, const bool struts):
     m_plateWidth(width),
     m_plateHeight(height),
-    m_nozzleWidth(0.6f),
+    m_nozzleWidth(1.5f),
     m_inputFile(inputFile),
     m_outputFile(outputFile),
-    m_debug(debug)
+    m_debug(debug),
+    m_struts(struts)
     {
     }
 
@@ -74,7 +75,7 @@ namespace cics
         int trueY = 0;
         int trueX = 0;
 
-        // bounds = Position(4, 4);
+        bounds = Position(6, 6);
         const int xBoundary = bounds.getX();
         const int yBoundary = bounds.getY();
 
@@ -115,7 +116,7 @@ namespace cics
         {
             for(const auto type : types)
             {
-                Stencil stencil(tiles, color, type, bounds, tileSizeMM);
+                Stencil stencil(tiles, color, type, bounds, tileSizeMM, m_struts);
                 stencils.push_back(stencil);
                 if(m_debug)
                 {
@@ -176,7 +177,7 @@ namespace cics
         int pixelsPerTile = 1;
 
         //only reduce resolution down to 25%
-        while(pixelsPerTile <= 9)
+        while(pixelsPerTile < 20)
         {
             //minimum tiles required to fit the whole image on the stencil, we'll also
             //let it round down, we can afford to drop off 1/2 off the side/bottom
@@ -188,7 +189,7 @@ namespace cics
             {
                 printf("calculated tile width is less nozzle width. tile: %f nozzle %f\n",tileSizeMM, m_nozzleWidth);
                 //+1 * new value 1 -> 4 -> 9
-                pixelsPerTile += pixelsPerTile;
+                pixelsPerTile = sqrt(pixelsPerTile) + 1;
                 pixelsPerTile *= pixelsPerTile;
                 continue;
             }

@@ -20,7 +20,7 @@ namespace cics
     class Stencilator
     {
         public:
-            Stencilator(const uint16_t width, const uint16_t height, const std::string &inputFile, const std::string & outputFile, const bool debug);
+            Stencilator(const uint16_t width, const uint16_t height, const std::string &inputFile, const std::string & outputFile, const bool debug, const bool struts);
             int execute();
 
         private:
@@ -35,5 +35,6 @@ namespace cics
             const std::string m_inputFile;
             const std::string m_outputFile;
             const bool m_debug;
+            const bool m_struts;
     };
 }
