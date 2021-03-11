@@ -3,9 +3,11 @@
 #include "../src/OBJ.h"
 #include "../src/Pixel.h"
 #include "../src/TranslatedPixel.h"
+#include <bitmap_image.hpp>
 
 UTEST(Tile, basic) {
-    TranslatedPixel tp;
+    std::unique_ptr<TranslatedPixel> tp;
+    Position pos(10,15);
 
     rgb_t color;
     color.red = 20;
@@ -18,13 +20,16 @@ UTEST(Tile, basic) {
     int steps = 5;
     float tileSizeMM = 1.0f;
 
-    tp = TranslatedPixel(std::move(pixels), steps, tileSizeMM);
+    tp.reset(new TranslatedPixel(pos, std::move(pixels), steps, tileSizeMM));
 
     Tile t(std::move(tp));
+
+    ASSERT_TRUE(true);
 }
 
-UTEST(Tile, basic) {
-    TranslatedPixel tp;
+UTEST(Tile, basicTwo) {
+    std::unique_ptr<TranslatedPixel> tp;
+    Position pos(10,15);
 
     rgb_t color;
     color.red = 255;
@@ -37,10 +42,12 @@ UTEST(Tile, basic) {
     int steps = 5;
     float tileSizeMM = 1.0f;
 
-    tp = TranslatedPixel(std::move(pixels), steps, tileSizeMM);
+    tp.reset(new TranslatedPixel(pos, std::move(pixels), steps, tileSizeMM));
 
     Tile tile(std::move(tp));
-    ObjectNumberGenerator ONG();
 
-    OBJData tileData = tile.getOBJData(m_objectNumberGenerator);
+    int faceId = 0;
+
+    OBJData tileData = tile.getOBJData(bitmap_image::color_plane::blue_plane, faceId);
+    ASSERT_TRUE(true);
 }
