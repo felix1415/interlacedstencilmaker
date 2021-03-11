@@ -137,19 +137,19 @@ std::vector<faces> Tile::getFaces(int & faceStartingNumber, const TileOptions ti
     facesToReturn.push_back({uint32_t(5+faceStartingNumber), uint32_t(6+faceStartingNumber), uint32_t(7+faceStartingNumber), uint32_t(8+faceStartingNumber)});
     
 
-    if(tileOptions != TileOptions::omitEnds) //we can omit this face, the outerTile will cover it always
+    // if(tileOptions != TileOptions::omitEnds) //we can omit this face, the outerTile will cover it always
     {
         // std::cout << "Removing ends from a tile" << std::endl;
         facesToReturn.push_back({uint32_t(3+faceStartingNumber), uint32_t(4+faceStartingNumber), uint32_t(8+faceStartingNumber), uint32_t(7+faceStartingNumber)});//top
     }
 
-    if(tileOptions != TileOptions::omitBottom and tileOptions != TileOptions::omitEnds )
+    // if(tileOptions != TileOptions::omitBottom and tileOptions != TileOptions::omitEnds )
     {
         // std::cout << "Removing bottom or ends from a tile" << std::endl;
         facesToReturn.push_back({uint32_t(1+faceStartingNumber), uint32_t(2+faceStartingNumber), uint32_t(6+faceStartingNumber), uint32_t(5+faceStartingNumber)});//bottom
     }
 
-    if(tileOptions != TileOptions::omitSides)
+    // if(tileOptions != TileOptions::omitSides)
     {
         //both sides of the tile
         // std::cout << "Removing both sides from a tile" << std::endl;
