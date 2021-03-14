@@ -25,7 +25,6 @@ enum TileOptions
 
 const static int INNER_TILE_VERTS = 8 * 3;
 const static int INNER_TILE_FACES = 6 * 3;
-
 /* Tile will generate the obj values for the space it is to occupy in 
 the stencil based on the strength of the colour it is representing. 
 It doesn't need to know which colour, only how strong that colour 
@@ -44,16 +43,13 @@ class Tile : public Position
         const rgb_t & getColor() const = delete;
         void calculateTranslatedColourValue() = delete;
 
-        virtual OBJData getOBJData(const bitmap_image::color_plane color, int & faceStartingNumber) const;
+        virtual OBJData getOBJData(int & faceStartingNumber, const bitmap_image::color_plane color) const;
         virtual std::string toString() const;
 
     protected:
-        std::vector<vertices> getVertices(float xStart, float xEnd, float yStart, float yEnd, const bool buffer = false) const;
+        std::vector<vertices> getVertices(float xStart, float xEnd, float yStart, float yEnd) const;
         std::vector<faces> getFaces(int & faceStartingNumber, const TileOptions tileOptions = TileOptions::none) const;
 
-        // OBJTile
-
-    
     private:
         std::unique_ptr<TranslatedPixel>  m_translatedPixel;
     protected:

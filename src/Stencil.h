@@ -24,6 +24,7 @@ class Stencil
 
     private:
         void generateOuterTiles(int & fsNumber);
+        void addBar(int & fsNumber, const int x, const int y, const int endX, const int endY);
         std::string stencilTypeToString(const Stencil::stencilType typeIn) const;
 
     private:

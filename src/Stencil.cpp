@@ -24,21 +24,16 @@ void Stencil::process()
 
     generateOuterTiles(faceStartingNumber);
 
-    if(m_struts)
-    {
-        // generateStruts(faceStartingNumber);
-    }
-
     for(size_t i = 0; i < m_tiles.size(); i++)
     {
         OBJData tileData;
         if(m_tiles[i].getY() % 2 and (stencilType::top == m_type))
         {
-            tileData = m_tiles[i].getOBJData(m_color, faceStartingNumber); // top is even tiles
+            tileData = m_tiles[i].getOBJData(faceStartingNumber, m_color); // top is even tiles
         }
         else if(not(m_tiles[i].getY() % 2) and (stencilType::bottom == m_type))
         {
-            tileData = m_tiles[i].getOBJData(m_color, faceStartingNumber); //bottom is odd tiles
+            tileData = m_tiles[i].getOBJData(faceStartingNumber, m_color); //bottom is odd tiles
         }
 
         m_vertices.insert(std::end(m_vertices), std::begin(tileData.first), std::end(tileData.first));
@@ -51,7 +46,6 @@ void Stencil::generateOuterTiles(int & fsNumber)
 {
     //while this function was supposed to generate tiles, these are now instead of tiles. 
     //this reduces the number of vertices as well as generation resources
-    int numberOfOuterTiles = 0;
 
     //we might be the tile without the last row of pixels, so we don't want 
     //to put an extra row of outertiles - it'll be unnecessary
@@ -80,51 +74,29 @@ void Stencil::generateOuterTiles(int & fsNumber)
         {
             tileData = outerTile.getOBJData(fsNumber); //bottom is odd tiles
         }
-        else if(y == 0 and (stencilType::bottom == m_type))
-        {
-            tileData = outerTile.getOBJData(fsNumber); //top of bottom stencil
-        }
         else
         {
             continue; // a line with inner tiles on, lets go to the next line
         }
 
-        //cura can only handle 65k vertices by the looks of it, anything after 65k defaults to 0,0...
-        //outer tiles should be struts and not tiles now
         m_vertices.insert(std::end(m_vertices), std::begin(tileData.first), std::end(tileData.first));
 
         m_faces.insert(std::end(m_faces), std::begin(tileData.second), std::end(tileData.second));
-        ++numberOfOuterTiles;
     }
 
-    {   //add left side y bar
-        OuterTile outerTile(0, 1, 1, m_bounds.getY(), m_tileSizeMM);
-        OBJData tileData = outerTile.getOBJData(fsNumber); 
+    addBar(fsNumber, 1, 0, xLength, 1); //top of bottom stencil
+    addBar(fsNumber, 0, 0, 1, 1); // positional notch
+    addBar(fsNumber, 0, 1, 1, m_bounds.getY()); //add left side y bar
+    addBar(fsNumber, xLength, 0, 1, m_bounds.getY() + 1 + m_type); //add right side y bar
+}
 
-        m_vertices.insert(std::end(m_vertices), std::begin(tileData.first), std::end(tileData.first));
-        m_faces.insert(std::end(m_faces), std::begin(tileData.second), std::end(tileData.second));
-        ++numberOfOuterTiles;
-    }
+void Stencil::addBar(int & fsNumber, const int x, const int y, const int endX, const int endY)
+{
+    OuterTile outerTile(x,  y, endX, endY, m_tileSizeMM);
+    OBJData tileData = outerTile.getOBJData(fsNumber); 
 
-    {   //add positional notch
-        OuterTile outerTile(0, 0, 1, 1, m_tileSizeMM);
-        OBJData tileData = outerTile.getOBJData(fsNumber); 
-
-        m_vertices.insert(std::end(m_vertices), std::begin(tileData.first), std::end(tileData.first));
-        m_faces.insert(std::end(m_faces), std::begin(tileData.second), std::end(tileData.second));
-        ++numberOfOuterTiles;
-    }
-
-    {   //add right side y bar
-        OuterTile outerTile(xLength, 0, 1, m_bounds.getY() + 1 + m_type, m_tileSizeMM);
-        OBJData tileData = outerTile.getOBJData(fsNumber); 
-
-        m_vertices.insert(std::end(m_vertices), std::begin(tileData.first), std::end(tileData.first));
-        m_faces.insert(std::end(m_faces), std::begin(tileData.second), std::end(tileData.second));
-        ++numberOfOuterTiles;
-    }
-
-
+    m_vertices.insert(std::end(m_vertices), std::begin(tileData.first), std::end(tileData.first));
+    m_faces.insert(std::end(m_faces), std::begin(tileData.second), std::end(tileData.second));
 }
 
 void Stencil::output(const std::string outputFile)

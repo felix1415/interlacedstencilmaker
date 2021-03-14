@@ -1,6 +1,7 @@
 //Copyright (c) 2021 Alex Gray
 
 #include "OuterTile.h"
+#include "Utils.h"
 #include <sstream>
 
 OuterTile::OuterTile(const uint16_t x, const uint16_t y, const uint16_t endX, const uint16_t endY, const float tileSizeMM):
@@ -11,16 +12,17 @@ m_endY(endY)
 }
 
 
-std::pair<std::vector<vertices>,std::vector<faces>> OuterTile::getOBJData(int & faceStartingNumber) const
+std::pair<std::vector<vertices>,std::vector<faces>> OuterTile::getOBJData(int & faceStartingNumber, const bitmap_image::color_plane) const
 {
+    float bufferVal = Utils::getBufferOBJValue(m_tileSizeMM);
     std::vector<vertices> verticesVec;
     std::vector<faces> facesVec;
     verticesVec.reserve(8); // 8 vertices
     facesVec.reserve(6); // 6 faces
     float xStart = 0.0f;
-    float xEnd = m_endX * m_tileSizeMM;
-    float yStart = 0.0f;
-    float yEnd = m_endY * m_tileSizeMM;  
+    float xEnd = (m_endX * m_tileSizeMM);
+    float yStart = 0.0f + bufferVal;
+    float yEnd = (m_endY * m_tileSizeMM) + bufferVal + bufferVal;
 
     //give the 0,0 tile a little notch so we know how to line up the final stencil
     if(getX() == 0 and getY() == 0)
