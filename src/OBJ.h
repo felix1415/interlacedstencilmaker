@@ -23,7 +23,7 @@ struct faces
   uint32_t   f4;
 };
 
-static const float STENCIL_THICKNESS = 1.8f;
+static const float STENCIL_THICKNESS = 0.8f;
 
 typedef std::pair<std::vector<vertices>,std::vector<faces>> OBJData;
 
