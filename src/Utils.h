@@ -5,24 +5,13 @@
 class Utils
 {
     public:
-        static std::string colorToString(bitmap_image::color_plane color)
-        {
-            switch(color)
-            {
-                case bitmap_image::color_plane::red_plane:
-                    return "red";
-                case bitmap_image::color_plane::green_plane:
-                    return "green";
-                case bitmap_image::color_plane::blue_plane:
-                    return "blue";
-                default:
-                    return "NotAColor";
-            }
-        }
+        static std::string colorToString(bitmap_image::color_plane color);
+        static std::string colorToString(int color);
 
-        static std::string colorToString(int color)
-        {
-            return colorToString((bitmap_image::color_plane)color);
-        }
+        static float getBufferOBJValue(const float tileSizeMM);
 
+    private:
+        //tile size, divided by this value will be added to each empty tile to 
+        //increase the empty space to make up for printed lines overflowing
+        static constexpr float LINE_OVERFLOW_BUFFER = 8;
 };
