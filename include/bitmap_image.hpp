@@ -46,7 +46,8 @@ public:
    enum color_plane {
                        blue_plane  = 0,
                        green_plane = 1,
-                       red_plane   = 2
+                       red_plane   = 2,
+                       none        = 3
                     };
 
    struct rgb_t
