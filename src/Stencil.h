@@ -15,7 +15,7 @@ class Stencil
                           bottom = 1
                       };
     public:
-        Stencil(std::vector<Tile> & tiles, const bitmap_image::color_plane color, const Stencil::stencilType type, const Position & bounds, const float tileSizeMM, const bool struts);
+        Stencil(std::vector<Tile> & tiles, const bitmap_image::color_plane color, const Stencil::stencilType type, const Position & bounds, const float tileSizeMM);
 
         void process();
         void output(const std::string outputFile);
@@ -33,7 +33,6 @@ class Stencil
         const Position m_bounds;
         const float m_tileSizeMM;
         const Stencil::stencilType m_type;
-        const bool m_struts;
         std::vector<vertices> m_vertices;
         std::vector<faces> m_faces;
 };

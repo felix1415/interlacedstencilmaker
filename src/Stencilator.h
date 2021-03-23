@@ -18,7 +18,7 @@ static const Stencil::stencilType types[] = { Stencil::stencilType::top, Stencil
 class Stencilator
 {
     public:
-        Stencilator(const uint16_t width, const uint16_t height, const std::string &inputFile, const std::string & outputFile, const bool debug, const bool struts);
+        Stencilator(const uint16_t width, const uint16_t height, const std::string &inputFile, const std::string & outputFile, const bool debug, const bool grayscale);
         int execute();
 
     private:
@@ -33,5 +33,5 @@ class Stencilator
         const std::string m_inputFile;
         const std::string m_outputFile;
         const bool m_debug;
-        const bool m_struts;
+        const bool m_grayscale;
 };

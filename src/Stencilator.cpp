@@ -9,14 +9,14 @@
 #include <memory>
 
 
-Stencilator::Stencilator(const uint16_t width, const uint16_t height, const std::string &inputFile, const std::string & outputFile, const bool debug, const bool struts):
+Stencilator::Stencilator(const uint16_t width, const uint16_t height, const std::string &inputFile, const std::string & outputFile, const bool debug, const bool grayscale):
 m_plateWidth(width),
 m_plateHeight(height),
 m_nozzleWidth(1.5f),
 m_inputFile(inputFile),
 m_outputFile(outputFile),
 m_debug(debug),
-m_struts(struts)
+m_grayscale(grayscale)
 {
 }
 
@@ -75,6 +75,7 @@ int Stencilator::execute()
     int trueX = 0;
 
     bounds = Position(6, 6);
+    bounds = Position(50, 50);
     const int xBoundary = bounds.getX();
     const int yBoundary = bounds.getY();
 
@@ -115,7 +116,7 @@ int Stencilator::execute()
     {
         for(const auto type : types)
         {
-            Stencil stencil(tiles, color, type, bounds, tileSizeMM, m_struts);
+            Stencil stencil(tiles, color, type, bounds, tileSizeMM);
             stencils.push_back(stencil);
             if(m_debug)
             {
@@ -126,12 +127,16 @@ int Stencilator::execute()
 
     stencils[0].process();
     stencils[0].output(m_outputFile);
-    // stencils[1].process();
-    // stencils[1].output(m_outputFile);
-    // stencils[2].process();
-    // stencils[2].output(m_outputFile);
-    // stencils[4].process();
-    // stencils[4].output(m_outputFile);
+    stencils[1].process();
+    stencils[1].output(m_outputFile);
+    stencils[2].process();
+    stencils[2].output(m_outputFile);
+    stencils[3].process();
+    stencils[3].output(m_outputFile);
+    stencils[4].process();
+    stencils[4].output(m_outputFile);
+    stencils[5].process();
+    stencils[5].output(m_outputFile);
 
     return 0;
 }
