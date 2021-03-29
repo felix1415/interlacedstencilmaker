@@ -27,7 +27,7 @@ UTEST(Tile, basic) {
     ASSERT_TRUE(true);
 }
 
-UTEST(Tile, basicTwo) {
+UTEST(Tile, getOBJData) {
     std::unique_ptr<TranslatedPixel> tp;
     Position pos(10,15);
 
@@ -48,6 +48,32 @@ UTEST(Tile, basicTwo) {
 
     int faceId = 0;
 
-    OBJData tileData = tile.getOBJData(bitmap_image::color_plane::blue_plane, faceId);
+    OBJData tileData = tile.getOBJData(faceId, bitmap_image::color_plane::blue_plane);
     ASSERT_TRUE(true);
+}
+
+UTEST(Tile, getOBJData2) {
+    std::unique_ptr<TranslatedPixel> tp;
+    Position pos(10,15);
+
+    rgb_t color;
+    color.red = 255;
+    color.green = 100;
+    color.blue = 0;
+
+    Pixel p(1, 2, color);
+    std::vector<Pixel> pixels;
+    pixels.push_back(p);
+    int steps = 5;
+    float tileSizeMM = 1.0f;
+
+    tp.reset(new TranslatedPixel(pos, std::move(pixels), steps, tileSizeMM));
+
+    Tile tile(std::move(tp));
+
+    int faceId = 0;
+
+    OBJData tileData = tile.getOBJData(faceId, bitmap_image::color_plane::blue_plane);
+    ASSERT_TRUE(tileData.first.size() == 6);
+    ASSERT_TRUE(tileData.second.size() == 8);
 }
