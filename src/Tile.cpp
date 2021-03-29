@@ -33,13 +33,14 @@ std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(int & faceS
     facesVec.reserve(INNER_TILE_FACES);
 
     float bufferVal = Utils::getBufferOBJValue(m_tileSizeMM);
+    const size_t numberOfColors = m_translatedPixel->getColorArraySize();
 
     float xStart = 0.0f;
-    float xEnd = m_tileSizeMM / 3;
+    float xEnd = m_tileSizeMM / numberOfColors;
     float yStart = 0.0f; // always 0, only end will change (pixel strength)
     float yEnd = 0.0f + bufferVal; // strength of color
 
-    const size_t numberOfColors = m_translatedPixel->getColorArray().size();
+    
     // for(const auto & color : m_translatedPixel.getColorArray())
     for(size_t i = 0; i < numberOfColors; i++)
     {
@@ -57,7 +58,7 @@ std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(int & faceS
             if(yEnd < (m_tileSizeMM / (m_translatedPixel->getSteps() + 1)) )
             {
                 xStart = xEnd;
-                xEnd += m_tileSizeMM / 3;
+                xEnd += m_tileSizeMM / numberOfColors;
                 tOptions = TileOptions::omitBottom;
                 continue;
             }
@@ -72,12 +73,12 @@ std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(int & faceS
             if((color == bitmap_image::color_plane::red_plane and i == 0)) 
             {   
                 //red is at the end, so here we can extend the first part of the tile from blue over green 
-                xEnd += (m_tileSizeMM / 3) - bufferVal;
+                xEnd += (m_tileSizeMM / numberOfColors) - bufferVal;
             }
             else if((color == bitmap_image::color_plane::blue_plane and i == 1)) 
             {   
                 //we want a bit of buffer for the empty tile, so we get that from the space buffer
-                xEnd += (m_tileSizeMM / 3) - bufferVal;
+                xEnd += (m_tileSizeMM / numberOfColors) - bufferVal;
             }
             //green is inbetween red and blue, so the green block over laps from red to blue 
             //accross tile boundaries, at the end of the tile, however, on the first tile (we
@@ -93,13 +94,13 @@ std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(int & faceS
             else if((color == bitmap_image::color_plane::green_plane and i == 2)) 
             {   
                 //green is in the middle, so extend the blocking tile into the next tile
-                xEnd += (m_tileSizeMM / 3) - bufferVal;
+                xEnd += (m_tileSizeMM / numberOfColors) - bufferVal;
             }
             //this is a skipping tile, still extend end for the actaul color to use
             //green is in the middle, so extend the blocking tile into the next color
             else if((color == bitmap_image::color_plane::green_plane and i == 0)) 
             {   
-                xEnd += (m_tileSizeMM / 3);
+                xEnd += (m_tileSizeMM / numberOfColors);
                 continue;
             }
             else

@@ -18,7 +18,7 @@ class Stencil
         Stencil(std::vector<Tile> & tiles, const bitmap_image::color_plane color, const Stencil::stencilType type, const Position & bounds, const float tileSizeMM);
 
         void process();
-        void output(const std::string outputFile);
+        void output(const std::string outputFile, const bool grayscale = false);
 
         std::string toString() const;
 

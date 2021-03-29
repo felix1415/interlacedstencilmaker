@@ -98,10 +98,13 @@ void Stencil::addBar(int & fsNumber, const int x, const int y, const int endX, c
     m_faces.insert(std::end(m_faces), std::begin(tileData.second), std::end(tileData.second));
 }
 
-void Stencil::output(const std::string outputFile)
+void Stencil::output(const std::string outputFile, const bool grayscale)
 {
     std::ostringstream ss;
-    ss << outputFile << "_" << stencilTypeToString(m_type) << "_" << Utils::colorToString(m_color) << ".obj";
+    if(not grayscale)
+        ss << outputFile << "_" << stencilTypeToString(m_type) << "_" << Utils::colorToString(m_color) << ".obj";
+    else
+        ss << outputFile << "_" << stencilTypeToString(m_type) << "_grayscale.obj";
 
     OBJ::writeOBJFile(ss.str(), m_vertices, m_faces);
 }

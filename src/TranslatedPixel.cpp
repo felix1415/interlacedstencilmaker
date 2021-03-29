@@ -1,8 +1,8 @@
 //Copyright (c) 2021 Alex Gray
 
-#include <sstream>
 #include "TranslatedPixel.h"
 #include "Utils.h"
+#include <sstream>
 
 TranslatedPixel::TranslatedPixel():
 Pixel(),
@@ -27,7 +27,7 @@ m_tileSizeMM(tileSizeMM)
         return;
     }
 
-    for(size_t i = 0; i < getColorArray().size(); i++)
+    for(size_t i = 0; i < getColorArraySize(); i++)
     {
         uint8_t numberOfPixels = m_pixels.size();
         uint16_t accumaltiveValue = 0;
@@ -63,6 +63,11 @@ float TranslatedPixel::getTileSizeMM() const
 uint16_t TranslatedPixel::getSteps() const
 {
     return m_steps;
+}
+
+size_t TranslatedPixel::getColorArraySize() const
+{
+    return m_translatedColors.size();
 }
 
 std::string TranslatedPixel::toString() const
