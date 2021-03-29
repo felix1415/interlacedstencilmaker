@@ -2,6 +2,7 @@
 
 #include "Stencilator.h"
 #include "Tile.h"
+#include "GrayTranslatedPixel.h"
 #include "Position.h"
 #include <tuple>
 #include <iostream>
@@ -74,7 +75,7 @@ int Stencilator::execute()
     int trueY = 0;
     int trueX = 0;
 
-    bounds = Position(6, 6);
+    // bounds = Position(2, 2);
     bounds = Position(50, 50);
     const int xBoundary = bounds.getX();
     const int yBoundary = bounds.getY();
@@ -85,11 +86,15 @@ int Stencilator::execute()
         {
 
             std::vector<Pixel> pixels = getPixels(pixelsPerTile, image, imageX, imageY);
-            std::unique_ptr<TranslatedPixel> tp = std::unique_ptr<TranslatedPixel>(new TranslatedPixel(Position(trueX, trueY), std::move(pixels), steps, tileSizeMM));
+            std::unique_ptr<TranslatedPixel> tp;
+            if(m_grayscale)
+                tp = std::unique_ptr<GrayTranslatedPixel>(new GrayTranslatedPixel(Position(trueX, trueY), std::move(pixels), steps, tileSizeMM));
+            else
+                tp = std::unique_ptr<TranslatedPixel>(new TranslatedPixel(Position(trueX, trueY), std::move(pixels), steps, tileSizeMM));
 
             if(m_debug)
             {
-                // printf("%s\n", tp->toString().c_str());
+                printf("%s\n", tp->toString().c_str());
             }
 
             tiles.emplace_back(std::move(tp));
@@ -112,31 +117,48 @@ int Stencilator::execute()
 
     std::vector<Stencil> stencils;
     
-    for(const auto color : colors)
+    if(m_grayscale)
     {
-        for(const auto type : types)
         {
-            Stencil stencil(tiles, color, type, bounds, tileSizeMM);
-            stencils.push_back(stencil);
-            if(m_debug)
-            {
-                printf("%s\n", stencil.toString().c_str());
-            }
+            Stencil stencil(tiles, bitmap_image::color_plane::blue_plane, Stencil::stencilType::top, bounds, tileSizeMM);
+            stencil.process();
+            stencil.output(m_outputFile, m_grayscale);
+        }
+
+        {
+            Stencil stencil(tiles, bitmap_image::color_plane::blue_plane, Stencil::stencilType::bottom, bounds, tileSizeMM);
+            stencil.process();
+            stencil.output(m_outputFile, m_grayscale);
         }
     }
+    else
+    {
+        for(const auto color : colors)
+        {
+            for(const auto type : types)
+            {
+                Stencil stencil(tiles, color, type, bounds, tileSizeMM);
+                stencils.push_back(stencil);
+                if(m_debug)
+                {
+                    printf("%s\n", stencil.toString().c_str());
+                }
+            }
+        }
 
-    stencils[0].process();
-    stencils[0].output(m_outputFile);
-    stencils[1].process();
-    stencils[1].output(m_outputFile);
-    stencils[2].process();
-    stencils[2].output(m_outputFile);
-    stencils[3].process();
-    stencils[3].output(m_outputFile);
-    stencils[4].process();
-    stencils[4].output(m_outputFile);
-    stencils[5].process();
-    stencils[5].output(m_outputFile);
+        stencils[0].process();
+        stencils[0].output(m_outputFile);
+        stencils[1].process();
+        stencils[1].output(m_outputFile);
+        stencils[2].process();
+        stencils[2].output(m_outputFile);
+        stencils[3].process();
+        stencils[3].output(m_outputFile);
+        stencils[4].process();
+        stencils[4].output(m_outputFile);
+        stencils[5].process();
+        stencils[5].output(m_outputFile);
+    }
 
     return 0;
 }
