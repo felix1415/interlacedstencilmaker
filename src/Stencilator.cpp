@@ -13,7 +13,7 @@
 Stencilator::Stencilator(const uint16_t width, const uint16_t height, const std::string &inputFile, const std::string & outputFile, const bool debug, const bool grayscale):
 m_plateWidth(width),
 m_plateHeight(height),
-m_nozzleWidth(1.5f),
+m_minimumTileSize(1.5f),
 m_inputFile(inputFile),
 m_outputFile(outputFile),
 m_debug(debug),
@@ -94,7 +94,7 @@ int Stencilator::execute()
 
             if(m_debug)
             {
-                printf("%s\n", tp->toString().c_str());
+                // printf("%s\n", tp->toString().c_str());
             }
 
             tiles.emplace_back(std::move(tp));
@@ -211,9 +211,9 @@ std::tuple<float, int, Position> Stencilator::calculateTileGeometries(const bitm
         minTilesRequired = minTilesRequired / sqrt(pixelsPerTile);
         float tileSizeMM = (float)m_plateWidth/(float)minTilesRequired;
 
-        if(tileSizeMM < m_nozzleWidth)
+        if(tileSizeMM < m_minimumTileSize)
         {
-            printf("calculated tile width is less nozzle width. tile: %f nozzle %f\n",tileSizeMM, m_nozzleWidth);
+            printf("calculated tile width is less nozzle width. tile: %f nozzle %f\n",tileSizeMM, m_minimumTileSize);
             //+1 * new value 1 -> 4 -> 9
             pixelsPerTile = sqrt(pixelsPerTile) + 1;
             pixelsPerTile *= pixelsPerTile;
@@ -224,7 +224,7 @@ std::tuple<float, int, Position> Stencilator::calculateTileGeometries(const bitm
         {
             printf("CALC TILE WIDTH   \n");
             printf("m_plateWidth   %d\n",m_plateWidth);
-            printf("m_nozzleWidth   %f\n",m_nozzleWidth);
+            printf("m_minimumTileSize   %f\n",m_minimumTileSize);
             printf("image.width()   %d\n",image.width());
             printf("image.height()   %d\n",image.height());
             printf("image.pixels   %d\n",image.height()*image.width());

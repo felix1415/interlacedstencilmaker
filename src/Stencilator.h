@@ -29,7 +29,7 @@ class Stencilator
     private:
         const uint16_t m_plateWidth;
         const uint16_t m_plateHeight;
-        const float m_nozzleWidth;
+        const float m_minimumTileSize;
         const std::string m_inputFile;
         const std::string m_outputFile;
         const bool m_debug;
