@@ -10,5 +10,32 @@ The top red stencil for the 'Small Nasa Logo':
 
 ![Small Nasa Logo](https://github.com/felix1415/interlacedstencilmaker/blob/main/smallnasa.bmp)
 
+### Running
+
+Standard example:
+./stencil_maker -i sample.bmp -W 220 -H 220 --grayscale
+
+### Testing
+
+cd test/
+make
+./ism_test
+
+### Help
+3 Colour Interlaced Stencil Creator
+A small utility for turning bitmap images into Interlaced stencils
+Usage:
+  Interlaced Stencil Maker [OPTION...]
+
+  -d, --debug       Debugging mode
+  -g, --grayscale   Generate grayscale stencil instead of an RGB collection
+                    of stencils
+  -w, --wrgb        Generate an RGB set of stencils to complement the
+                    grayscale
+  -W, --width arg   Width of image
+  -H, --height arg  Height of image
+  -i, --input arg   Input file
+  -o, --output arg  Output folder (default: ISM)
+
 Todo:
 Upload the Cura settings for the 3D printer. 
