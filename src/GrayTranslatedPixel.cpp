@@ -77,9 +77,9 @@ std::string GrayTranslatedPixel::toString() const
     std::ostringstream ss;
 
     ss << "TP " << getX() << "," << getY() << " - ";
-    for(size_t i = 0; i < m_translatedColors.size(); i++)
+    for(size_t i = 0; i < getColorArraySize(); i++)
     {
-        ss << "grayscale" << ":"<< m_translatedColors[i] << " ";
+        ss << "grayscale " << i << " :"<< m_translatedColors[i] << " ";
     }
     ss << "\n";
     // for(const auto & pixel : m_pixels)

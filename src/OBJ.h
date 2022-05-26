@@ -67,6 +67,8 @@ class OBJ
 
                 objFile << "# end of obj_0\n";
                 objFile.close();
+
+                std::cout << "Wrote " << outputFile << std::endl;
             }
             catch(...)
             {
