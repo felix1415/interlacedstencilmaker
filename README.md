@@ -13,15 +13,18 @@ The top red stencil for the 'Small Nasa Logo':
 ### Running
 
 Standard example:
-./stencil_maker -i sample.bmp -W 220 -H 220 --grayscale
+`./stencil_maker -i sample.bmp -W 220 -H 220 --grayscale`
 
 ### Testing
 
+```
 cd test/
 make
 ./ism_test
+```
 
 ### Help
+```
 3 Colour Interlaced Stencil Creator
 A small utility for turning bitmap images into Interlaced stencils
 Usage:
@@ -37,5 +40,8 @@ Usage:
   -i, --input arg   Input file
   -o, --output arg  Output folder (default: ISM)
 
+```
+
 Todo:
 Upload the Cura settings for the 3D printer. 
+
