@@ -4,7 +4,7 @@
 #include "../src/GrayTranslatedPixel.h"
 #include <memory>
 
-UTEST(GreyTranslatedPixel, basicAll) {
+UTEST(GrayTranslatedPixel, basicAll) {
     std::unique_ptr<TranslatedPixel> tp;
     Position pos(10,15);
 
@@ -32,7 +32,7 @@ UTEST(GreyTranslatedPixel, basicAll) {
     ASSERT_EQ(1.0f, tp->getTranslatedColorValue(bitmap_image::color_plane::blue_plane));
 }
 
-UTEST(GreyTranslatedPixel, red) {
+UTEST(GrayTranslatedPixel, red) {
     std::unique_ptr<TranslatedPixel> tp;
     Position pos(10,15);
 
@@ -60,7 +60,7 @@ UTEST(GreyTranslatedPixel, red) {
     ASSERT_EQ(0.21f, tp->getTranslatedColorValue(bitmap_image::color_plane::blue_plane));
 }
 
-UTEST(GreyTranslatedPixel, green) {
+UTEST(GrayTranslatedPixel, green) {
     std::unique_ptr<TranslatedPixel> tp;
     Position pos(10,15);
 
@@ -88,7 +88,7 @@ UTEST(GreyTranslatedPixel, green) {
     ASSERT_EQ(0.72f, tp->getTranslatedColorValue(bitmap_image::color_plane::blue_plane));
 }
 
-UTEST(GreyTranslatedPixel, blue) {
+UTEST(GrayTranslatedPixel, blue) {
     std::unique_ptr<TranslatedPixel> tp;
     Position pos(10,15);
 
@@ -110,7 +110,6 @@ UTEST(GreyTranslatedPixel, blue) {
     ASSERT_EQ(tp->getX(), 10);
     ASSERT_EQ(tp->getY(), 15);
 
-    std::cout << tp->getTranslatedColorValue(bitmap_image::color_plane::blue_plane) << std::endl;
     //Values are translated using the steps value
     ASSERT_EQ(0, tp->getTranslatedColorValue(bitmap_image::color_plane::red_plane));
     ASSERT_EQ(0, tp->getTranslatedColorValue(bitmap_image::color_plane::green_plane));
@@ -118,7 +117,7 @@ UTEST(GreyTranslatedPixel, blue) {
 
 }
 
-UTEST(GreyTranslatedPixel, basic125) {
+UTEST(GrayTranslatedPixel, basic125) {
     std::unique_ptr<TranslatedPixel> tp;
     Position pos(10,15);
 
