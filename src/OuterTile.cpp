@@ -12,7 +12,7 @@ m_endY(endY)
 }
 
 
-std::pair<std::vector<vertices>,std::vector<faces>> OuterTile::getOBJData(int & faceStartingNumber, const bitmap_image::color_plane) const
+std::pair<std::vector<vertices>,std::vector<faces>> OuterTile::getOBJData(int & faceStartingNumber, const int) const
 {
     float bufferVal = Utils::getBufferOBJValue(m_tileSizeMM);
     std::vector<vertices> verticesVec;

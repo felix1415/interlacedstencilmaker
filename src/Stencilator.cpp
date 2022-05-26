@@ -2,6 +2,8 @@
 
 #include "Stencilator.h"
 #include "Tile.h"
+#include "RGBTile.h"
+#include "WRGBTranslatedPixel.h"
 #include "GrayTranslatedPixel.h"
 #include "Position.h"
 #include <tuple>
@@ -10,14 +12,15 @@
 #include <memory>
 
 
-Stencilator::Stencilator(const uint16_t width, const uint16_t height, const std::string &inputFile, const std::string & outputFile, const bool debug, const bool grayscale):
+Stencilator::Stencilator(const uint16_t width, const uint16_t height, const std::string &inputFile, const std::string & outputFile, const bool debug, const bool grayscale, const bool wrgb):
 m_plateWidth(width),
 m_plateHeight(height),
 m_minimumTileSize(1.5f),
 m_inputFile(inputFile),
 m_outputFile(outputFile),
 m_debug(debug),
-m_grayscale(grayscale)
+m_grayscale(grayscale),
+m_wrgb(wrgb)
 {
 }
 
@@ -76,7 +79,7 @@ int Stencilator::execute()
     int trueX = 0;
 
     // bounds = Position(2, 2);
-    bounds = Position(50, 50);
+    // bounds = Position(50, 50);
     const int xBoundary = bounds.getX();
     const int yBoundary = bounds.getY();
 
@@ -88,19 +91,28 @@ int Stencilator::execute()
             std::vector<Pixel> pixels = getPixels(pixelsPerTile, image, imageX, imageY);
             std::unique_ptr<TranslatedPixel> tp;
             if(m_grayscale)
+            {
                 tp = std::unique_ptr<GrayTranslatedPixel>(new GrayTranslatedPixel(Position(trueX, trueY), std::move(pixels), steps, tileSizeMM));
+                tiles.emplace_back(std::move(tp));
+            }
+            else if(m_wrgb)
+            {
+                tp = std::unique_ptr<WRGBTranslatedPixel>(new WRGBTranslatedPixel(Position(trueX, trueY), std::move(pixels), steps, tileSizeMM));
+                tiles.emplace_back<RGBTile>(std::move(tp));
+            }
             else
+            {
                 tp = std::unique_ptr<TranslatedPixel>(new TranslatedPixel(Position(trueX, trueY), std::move(pixels), steps, tileSizeMM));
+                tiles.emplace_back(std::move(tp));
+            }
 
             if(m_debug)
             {
-                // printf("%s\n", tp->toString().c_str());
+                std::cout << tiles.back().toString() << std::endl;
             }
 
-            tiles.emplace_back(std::move(tp));
+
             imageX += pixelsPerAxis;
-
-
             trueX++;
         }
         imageX = 0;
@@ -203,7 +215,7 @@ std::tuple<float, int, Position> Stencilator::calculateTileGeometries(const bitm
     int pixelsPerTile = 1;
 
     //only reduce resolution down to 25%
-    while(pixelsPerTile < 20)
+    while(pixelsPerTile < 150)
     {
         //minimum tiles required to fit the whole image on the stencil, we'll also
         //let it round down, we can afford to drop off 1/2 off the side/bottom

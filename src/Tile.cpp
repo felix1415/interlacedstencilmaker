@@ -25,7 +25,7 @@ m_type(TileType::borderTile)
 {
 }
 
-std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(int & faceStartingNumber, const bitmap_image::color_plane color) const
+std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(int & faceStartingNumber, const int color) const
 {
     std::vector<vertices> verticesVec;
     std::vector<faces> facesVec;

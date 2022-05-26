@@ -43,14 +43,14 @@ class Tile : public Position
         const rgb_t & getColor() const = delete;
         void calculateTranslatedColourValue() = delete;
 
-        virtual OBJData getOBJData(int & faceStartingNumber, const bitmap_image::color_plane color) const;
+        virtual OBJData getOBJData(int & faceStartingNumber, const int color) const;
         virtual std::string toString() const;
 
     protected:
         std::vector<vertices> getVertices(float xStart, float xEnd, float yStart, float yEnd) const;
         std::vector<faces> getFaces(int & faceStartingNumber, const TileOptions tileOptions = TileOptions::none) const;
 
-    private:
+    protected:
         std::unique_ptr<TranslatedPixel>  m_translatedPixel;
     protected:
         const float m_tileSizeMM;

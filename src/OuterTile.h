@@ -8,7 +8,7 @@ class OuterTile : public Tile
     public:
         OuterTile(const uint16_t x, const uint16_t y, const uint16_t endX, const uint16_t endY, const float tileSizeMM);
 
-        OBJData getOBJData(int & faceStartingNumber, const bitmap_image::color_plane = bitmap_image::color_plane::none) const override;
+        OBJData getOBJData(int & faceStartingNumber, const int = 0) const;
 
         std::string toString() const override;
 
