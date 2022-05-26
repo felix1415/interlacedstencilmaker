@@ -5,7 +5,7 @@
 #include "OuterTile.h"
 #include "Utils.h"
 
-Stencil::Stencil(std::vector<Tile> & tiles, const bitmap_image::color_plane color, const Stencil::stencilType type, const Position & bounds, const float tileSizeMM):
+Stencil::Stencil(std::vector<Tile> & tiles, const bitmap_image::color_plane color, const Stencil::stencilPlate type, const Position & bounds, const float tileSizeMM):
 m_tiles(tiles),
 m_color(color),
 m_bounds(bounds),
@@ -26,11 +26,11 @@ void Stencil::process()
     for(size_t i = 0; i < m_tiles.size(); i++)
     {
         OBJData tileData;
-        if(m_tiles[i].getY() % 2 and (stencilType::top == m_type))
+        if(m_tiles[i].getY() % 2 and (stencilPlate::top == m_type))
         {
             tileData = m_tiles[i].getOBJData(faceStartingNumber, m_color); // top is even tiles
         }
-        else if(not(m_tiles[i].getY() % 2) and (stencilType::bottom == m_type))
+        else if(not(m_tiles[i].getY() % 2) and (stencilPlate::bottom == m_type))
         {
             tileData = m_tiles[i].getOBJData(faceStartingNumber, m_color); //bottom is odd tiles
         }
@@ -65,11 +65,11 @@ void Stencil::generateOuterTiles(int & fsNumber)
 
         //we will do the same conditional as in process as we are 
         //shifted by one tile to the left compared to inner tiles 
-        if(not (y % 2) and (stencilType::top == m_type) and y != (yLength -1))
+        if(not (y % 2) and (stencilPlate::top == m_type) and y != (yLength -1))
         {
             tileData = outerTile.getOBJData(fsNumber); // top is even tiles
         }
-        else if((y % 2) and (stencilType::bottom == m_type))
+        else if((y % 2) and (stencilPlate::bottom == m_type))
         {
             tileData = outerTile.getOBJData(fsNumber); //bottom is odd tiles
         }
@@ -102,9 +102,9 @@ void Stencil::output(const std::string outputFile, const bool grayscale)
 {
     std::ostringstream ss;
     if(not grayscale)
-        ss << outputFile << "_" << stencilTypeToString(m_type) << "_" << Utils::colorToString(m_color) << ".obj";
+        ss << outputFile << "_" << stencilPlateToString(m_type) << "_" << Utils::colorToString(m_color) << ".obj";
     else
-        ss << outputFile << "_" << stencilTypeToString(m_type) << "_grayscale.obj";
+        ss << outputFile << "_" << stencilPlateToString(m_type) << "_grayscale.obj";
 
     OBJ::writeOBJFile(ss.str(), m_vertices, m_faces);
 }
@@ -113,15 +113,15 @@ std::string Stencil::toString() const
 {
     std::ostringstream ss;
 
-    ss << Utils::colorToString(m_color) << " stencil " << stencilTypeToString(m_type) << " - size:" << m_tiles.size();
+    ss << Utils::colorToString(m_color) << " stencil " << stencilPlateToString(m_type) << " - size:" << m_tiles.size();
     return ss.str();
 }
 
-std::string Stencil::stencilTypeToString(const Stencil::stencilType typeIn) const
+std::string Stencil::stencilPlateToString(const Stencil::stencilPlate typeIn) const
 {
-    if(typeIn == Stencil::stencilType::top)
+    if(typeIn == Stencil::stencilPlate::top)
         return "top";
-    if(typeIn == Stencil::stencilType::bottom)
+    if(typeIn == Stencil::stencilPlate::bottom)
         return "bottom";
 
     return "unknown stencil type";

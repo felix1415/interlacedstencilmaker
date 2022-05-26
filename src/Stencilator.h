@@ -9,11 +9,11 @@
 #include <vector>
 
 
-static const bitmap_image::color_plane colors[] = { bitmap_image::color_plane::blue_plane, 
-                                                    bitmap_image::color_plane::green_plane, 
-                                                    bitmap_image::color_plane::red_plane };
+// static const bitmap_image::color_plane colors[] = { bitmap_image::color_plane::blue_plane, 
+//                                                     bitmap_image::color_plane::green_plane, 
+//                                                     bitmap_image::color_plane::red_plane };
 
-static const Stencil::stencilType types[] = { Stencil::stencilType::top, Stencil::stencilType::bottom };
+static const Stencil::stencilPlate plates[] = { Stencil::stencilPlate::top, Stencil::stencilPlate::bottom };
 
 class Stencilator
 {

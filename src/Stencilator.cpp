@@ -132,24 +132,24 @@ int Stencilator::execute()
     if(m_grayscale)
     {
         {
-            Stencil stencil(tiles, bitmap_image::color_plane::blue_plane, Stencil::stencilType::top, bounds, tileSizeMM);
+            Stencil stencil(tiles, bitmap_image::color_plane::blue_plane, Stencil::stencilPlate::top, bounds, tileSizeMM);
             stencil.process();
             stencil.output(m_outputFile, m_grayscale);
         }
 
         {
-            Stencil stencil(tiles, bitmap_image::color_plane::blue_plane, Stencil::stencilType::bottom, bounds, tileSizeMM);
+            Stencil stencil(tiles, bitmap_image::color_plane::blue_plane, Stencil::stencilPlate::bottom, bounds, tileSizeMM);
             stencil.process();
             stencil.output(m_outputFile, m_grayscale);
         }
     }
     else if(not m_grayscale or m_wrgb)
     {
-        for(const auto color : colors)
+        for(int color=0; color==bitmap_image::color_plane::red_plane; color++)
         {
-            for(const auto type : types)
+            for(const auto plate : plates)
             {
-                Stencil stencil(tiles, color, type, bounds, tileSizeMM);
+                Stencil stencil(tiles, (bitmap_image::color_plane)color, plate, bounds, tileSizeMM);
                 stencils.push_back(stencil);
                 if(m_debug)
                 {

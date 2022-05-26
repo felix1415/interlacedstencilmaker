@@ -10,12 +10,12 @@
 class Stencil
 {
     public:
-            enum stencilType {
+            enum stencilPlate {
                           top = 0,
                           bottom = 1
                       };
     public:
-        Stencil(std::vector<Tile> & tiles, const bitmap_image::color_plane color, const Stencil::stencilType type, const Position & bounds, const float tileSizeMM);
+        Stencil(std::vector<Tile> & tiles, const bitmap_image::color_plane color, const Stencil::stencilPlate type, const Position & bounds, const float tileSizeMM);
 
         void process();
         void output(const std::string outputFile, const bool grayscale = false);
@@ -25,14 +25,14 @@ class Stencil
     private:
         void generateOuterTiles(int & fsNumber);
         void addBar(int & fsNumber, const int x, const int y, const int endX, const int endY);
-        std::string stencilTypeToString(const Stencil::stencilType typeIn) const;
+        std::string stencilPlateToString(const Stencil::stencilPlate typeIn) const;
 
     private:
         const std::vector<Tile> & m_tiles;
         const bitmap_image::color_plane m_color;
         const Position m_bounds;
         const float m_tileSizeMM;
-        const Stencil::stencilType m_type;
+        const Stencil::stencilPlate m_type;
         std::vector<vertices> m_vertices;
         std::vector<faces> m_faces;
 };
