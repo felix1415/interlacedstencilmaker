@@ -27,13 +27,12 @@ m_type(TileType::borderTile)
 
 std::pair<std::vector<vertices>,std::vector<faces>> Tile::getOBJData(int & faceStartingNumber, const int color) const
 {
+    const size_t numberOfColors = m_translatedPixel->getColorArraySize();
+    float bufferVal = Utils::getBufferOBJValue(m_tileSizeMM);
     std::vector<vertices> verticesVec;
     std::vector<faces> facesVec;
-    verticesVec.reserve(INNER_TILE_VERTS); // 8 vertices * 3 colors
-    facesVec.reserve(INNER_TILE_FACES);
-
-    float bufferVal = Utils::getBufferOBJValue(m_tileSizeMM);
-    const size_t numberOfColors = m_translatedPixel->getColorArraySize();
+    verticesVec.reserve(INNER_TILE_VERTS * numberOfColors); // 8 vertices * 3 colors
+    facesVec.reserve(INNER_TILE_FACES * numberOfColors);  
 
     float xStart = 0.0f;
     float xEnd = m_tileSizeMM / numberOfColors;

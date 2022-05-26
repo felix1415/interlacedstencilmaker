@@ -143,7 +143,7 @@ int Stencilator::execute()
             stencil.output(m_outputFile, m_grayscale);
         }
     }
-    else
+    else if(not m_grayscale or m_wrgb)
     {
         for(const auto color : colors)
         {
