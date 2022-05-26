@@ -19,10 +19,11 @@ int App::run(int argc, char * argv[])
         options.add_options()
           ("d,debug", "Debugging mode", cxxopts::value<bool>()->default_value("false"))
           ("g,grayscale", "Generate grayscale stencil instead of an RGB collection of stencils", cxxopts::value<bool>()->default_value("false"))
+          ("c,wrgb", "Generate an RGB set of stencils to complement the grayscale", cxxopts::value<bool>()->default_value("false"))
           ("w,width", "Width of image", cxxopts::value<uint16_t>())
           ("h,height", "Height of image", cxxopts::value<uint16_t>())
           ("i,input", "Input file", cxxopts::value<std::string>())
-          ("o,output", "Output folder", cxxopts::value<std::string>()->default_value("ISM_Output"))
+          ("o,output", "Output folder", cxxopts::value<std::string>()->default_value("ISM"))
           ;
     }
     catch(const cxxopts::OptionSpecException & e)
@@ -55,6 +56,7 @@ int App::run(int argc, char * argv[])
                        result["input"].as<std::string>(),
                        result["output"].as<std::string>(),
                        result["debug"].as<bool>(),
-                       result["grayscale"].as<bool>()
+                       result["grayscale"].as<bool>(),
+                       result["wrgb"].as<bool>()
                        ).execute();
 }
