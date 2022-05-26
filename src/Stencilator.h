@@ -3,6 +3,7 @@
 #pragma once
 #include "Pixel.h"
 #include "Stencil.h"
+#include "StencilType.h"
 #include <bitmap_image.hpp>
 #include <iostream>
 #include <string>
@@ -13,7 +14,7 @@ static const Stencil::stencilPlate plates[] = { Stencil::stencilPlate::top, Sten
 class Stencilator
 {
     public:
-        Stencilator(const uint16_t width, const uint16_t height, const std::string &inputFile, const std::string & outputFile, const bool debug, const bool grayscale, const bool wrgb);
+        Stencilator(const uint16_t width, const uint16_t height, const std::string &inputFile, const std::string & outputFile, const bool debug, const StencilType::Type stencilType);
         int execute();
 
     private:
@@ -28,6 +29,5 @@ class Stencilator
         const std::string m_inputFile;
         const std::string m_outputFile;
         const bool m_debug;
-        const bool m_grayscale;
-        const bool m_wrgb;
+        const StencilType::Type m_stencilType;
 };

@@ -77,7 +77,7 @@ std::string TranslatedPixel::toString() const
     ss << "TP " << getX() << "," << getY() << " - ";
     for(size_t i = 0; i < m_translatedColors.size(); i++)
     {
-        ss << Utils::colorToString(i) << ":"<< m_translatedColors[i] << " ";
+        ss << Utils::colorToStringRGB(i) << ":"<< m_translatedColors[i] << " ";
     }
     ss << "\n";
     for(const auto & pixel : m_pixels)

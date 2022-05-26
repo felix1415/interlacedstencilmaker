@@ -2,12 +2,12 @@
 
 #include "Utils.h"
 
-std::string Utils::colorToString(int color)
+std::string Utils::colorToStringRGB(int color)
 {
-    return colorToString((bitmap_image::color_plane)color);
+    return colorToStringRGB((bitmap_image::color_plane)color);
 }
 
-std::string Utils::colorToString(bitmap_image::color_plane color)
+std::string Utils::colorToStringRGB(bitmap_image::color_plane color)
 {
     switch(color)
     {

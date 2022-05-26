@@ -5,8 +5,8 @@
 class Utils
 {
     public:
-        static std::string colorToString(bitmap_image::color_plane color);
-        static std::string colorToString(int color);
+        static std::string colorToStringRGB(bitmap_image::color_plane color);
+        static std::string colorToStringRGB(int color);
 
         static float getBufferOBJValue(const float tileSizeMM);
 

@@ -2,6 +2,7 @@
 
 #include "App.h"
 #include "Stencilator.h"
+#include "StencilType.h"
 #include "Utils.h"
 #include <cxxopts.hpp>
 #include <ctime>
@@ -42,7 +43,6 @@ int App::run(int argc, char * argv[])
             std::cout << options.help() << std::endl;
             exit(0);
         }
-        std::cerr << "After helpoo message" << std::endl;
 
         if(not result.count("input"))
         {
@@ -62,13 +62,14 @@ int App::run(int argc, char * argv[])
             return 0;
         }
 
+        StencilType::Type stencilType = StencilType::getType(result);
+
         return Stencilator(result["width"].as<uint16_t>(), 
                    result["height"].as<uint16_t>(), 
                    result["input"].as<std::string>(),
                    result["output"].as<std::string>(),
                    result["debug"].as<bool>(),
-                   result["grayscale"].as<bool>(),
-                   result["wrgb"].as<bool>()
+                   stencilType
                    ).execute();
     }
     catch(const cxxopts::OptionParseException & e)

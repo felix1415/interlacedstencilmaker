@@ -44,7 +44,7 @@ std::string Pixel::toString() const
     ss << Position::toString() << "\n";
     for(size_t i = 0; i < getColorArray().size(); i++)
     {
-        ss << "    " << Utils::colorToString(i) << ":"<< m_colorArray[i] << " ";
+        ss << "    " << Utils::colorToStringRGB(i) << ":"<< m_colorArray[i] << " ";
     }
     ss  << "\n";
 
