@@ -10,7 +10,7 @@ The top red stencil for the 'Small Nasa Logo':
 
 ![Small Nasa Logo](https://github.com/felix1415/interlacedstencilmaker/blob/main/smallnasa.bmp)
 
-###Building
+### Building
 
 `make`
 
