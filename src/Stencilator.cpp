@@ -3,9 +3,12 @@
 #include "Stencilator.h"
 #include "Tile.h"
 #include "RGBTile.h"
+#include "CMYKTile.h"
 #include "WRGBTranslatedPixel.h"
 #include "GrayTranslatedPixel.h"
+#include "CMYKTranslatedPixel.h"
 #include "Position.h"
+#include "Utils.h"
 #include <tuple>
 #include <iostream>
 #include <sstream>
@@ -70,14 +73,14 @@ int Stencilator::execute()
         printf("steps: %d\n",steps);
     }
 
-    std::vector<Tile> tiles;
+    std::vector<std::unique_ptr<Tile>> tiles;
 
     int imageX = 0;
     int imageY = 0;
     int trueY = 0;
     int trueX = 0;
 
-    // bounds = Position(2, 2);
+    bounds = Position(4, 2);
     // bounds = Position(50, 50);
     const int xBoundary = bounds.getX();
     const int yBoundary = bounds.getY();
@@ -86,28 +89,34 @@ int Stencilator::execute()
     {
         while(trueX < xBoundary)
         {
-
             std::vector<Pixel> pixels = getPixels(pixelsPerTile, image, imageX, imageY);
             std::unique_ptr<TranslatedPixel> tp;
+
             if(m_stencilType == StencilType::Type::grayscale)
             {
                 tp = std::unique_ptr<GrayTranslatedPixel>(new GrayTranslatedPixel(Position(trueX, trueY), std::move(pixels), steps, tileSizeMM));
-                tiles.emplace_back(std::move(tp));
+                tiles.emplace_back(std::unique_ptr<RGBTile>(new RGBTile(std::move(tp))));
             }
             else if(m_stencilType == StencilType::Type::wrgb)
             {
                 tp = std::unique_ptr<WRGBTranslatedPixel>(new WRGBTranslatedPixel(Position(trueX, trueY), std::move(pixels), steps, tileSizeMM));
-                tiles.emplace_back<RGBTile>(std::move(tp));
+                tiles.emplace_back(std::unique_ptr<RGBTile>(new RGBTile(std::move(tp))));
+            }
+            else if(m_stencilType == StencilType::Type::cmyk)
+            {
+                tp = std::unique_ptr<CMYKTranslatedPixel>(new CMYKTranslatedPixel(Position(trueX, trueY), std::move(pixels), steps, tileSizeMM));
+                tiles.emplace_back(std::unique_ptr<CMYKTile>(new CMYKTile(std::move(tp))));
             }
             else if(m_stencilType == StencilType::Type::rgb)
             {
                 tp = std::unique_ptr<TranslatedPixel>(new TranslatedPixel(Position(trueX, trueY), std::move(pixels), steps, tileSizeMM));
-                tiles.emplace_back(std::move(tp));
+                tiles.emplace_back(std::unique_ptr<RGBTile>(new RGBTile(std::move(tp))));
             }
+
 
             if(m_debug)
             {
-                std::cout << tiles.back().toString() << std::endl;
+                std::cout << tiles.back()->toString() << std::endl;
             }
 
 
@@ -121,12 +130,30 @@ int Stencilator::execute()
         trueY++;
     }
 
-    std::cout << "imageX: " << imageX << " imageY: " << imageY << std::endl;
-    std::cout << "trueX " << trueX << "trueY " << trueY << std::endl;
-    std::cout << "xBoundary " << xBoundary << "yBoundary " << yBoundary << std::endl;
+    // std::cout << "imageX: " << imageX << " imageY: " << imageY << std::endl;
+    // std::cout << "trueX " << trueX << "trueY " << trueY << std::endl;
+    // std::cout << "xBoundary " << xBoundary << "yBoundary " << yBoundary << std::endl;
 
 
     std::vector<Stencil> stencils;
+
+    if(m_stencilType == StencilType::Type::cmyk)
+    {
+        for(int color=0; color < 4; color++)
+        {
+            {
+                Stencil stencil(tiles, color, Stencil::stencilPlate::top, bounds, tileSizeMM, true);
+                stencil.process();
+                stencil.output(m_outputFile, Utils::colorToStringCMYK(color));
+            }
+            {
+                Stencil stencil(tiles, color, Stencil::stencilPlate::bottom, bounds, tileSizeMM, true);
+                stencil.process();
+                stencil.output(m_outputFile, Utils::colorToStringCMYK(color));
+            }
+        }
+    }
+
     
     if(m_stencilType == StencilType::Type::grayscale or m_stencilType == StencilType::Type::rgb)
     {
@@ -134,13 +161,13 @@ int Stencilator::execute()
         if(m_debug)
             std::cout << "Generating grayscale stencils" << std::endl;
         {
-            Stencil stencil(tiles, bitmap_image::color_plane::blue_plane, Stencil::stencilPlate::top, bounds, tileSizeMM);
+            Stencil stencil(tiles, bitmap_image::color_plane::blue_plane, Stencil::stencilPlate::top, bounds, tileSizeMM, false);
             stencil.process();
             stencil.output(m_outputFile, "grayscale");
         }
 
         {
-            Stencil stencil(tiles, bitmap_image::color_plane::blue_plane, Stencil::stencilPlate::bottom, bounds, tileSizeMM);
+            Stencil stencil(tiles, bitmap_image::color_plane::blue_plane, Stencil::stencilPlate::bottom, bounds, tileSizeMM, false);
             stencil.process();
             stencil.output(m_outputFile, "grayscale");
         }
@@ -157,7 +184,7 @@ int Stencilator::execute()
             std::cout << color << std::endl;
             for(const auto plate : plates)
             {
-                Stencil stencil(tiles, (bitmap_image::color_plane)color, plate, bounds, tileSizeMM);
+                Stencil stencil(tiles, (bitmap_image::color_plane)color, plate, bounds, tileSizeMM, false);
                 stencils.push_back(stencil);
                 if(m_debug)
                 {

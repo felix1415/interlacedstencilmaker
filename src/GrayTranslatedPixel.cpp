@@ -46,8 +46,7 @@ m_translatedColors{0}
     }
 }
 
-//this will crash if we try to use anything but 0/blue - it is gray, but it's stored as 'blue'
-float GrayTranslatedPixel::getTranslatedColorValue(const bitmap_image::color_plane color) const
+float GrayTranslatedPixel::getTranslatedColorValue(const int color) const
 {
     return m_translatedColors[color];
 }

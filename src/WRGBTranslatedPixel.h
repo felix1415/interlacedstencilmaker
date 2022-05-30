@@ -12,7 +12,7 @@ class WRGBTranslatedPixel : public TranslatedPixel
         WRGBTranslatedPixel(const Position & position, std::vector<Pixel> && pixels, const uint16_t steps, const float tileSizeMM);
         WRGBTranslatedPixel();
 
-        float getTranslatedColorValue(const bitmap_image::color_plane color) const override;
+        float getTranslatedColorValue(const int color) const override;
         //shadow pixel function
         size_t getColorArraySize() const override;
 

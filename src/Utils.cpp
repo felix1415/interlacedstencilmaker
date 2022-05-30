@@ -2,21 +2,38 @@
 
 #include "Utils.h"
 
-std::string Utils::colorToStringRGB(int color)
+std::string Utils::colorToStringRGB(const int color)
 {
     return colorToStringRGB((bitmap_image::color_plane)color);
 }
 
-std::string Utils::colorToStringRGB(bitmap_image::color_plane color)
+std::string Utils::colorToStringRGB(const bitmap_image::color_plane color)
 {
     switch(color)
     {
-        case bitmap_image::color_plane::red_plane:
+        case 0:
             return "red";
-        case bitmap_image::color_plane::green_plane:
+        case 1:
             return "green";
-        case bitmap_image::color_plane::blue_plane:
+        case 2:
             return "blue";
+        default:
+            return "NotAColor";
+    }
+}
+
+std::string Utils::colorToStringCMYK(const int color)
+{
+    switch(color)
+    {
+        case 0:
+            return "cyan";
+        case 1:
+            return "magenta";
+        case 2:
+            return "yellow";
+        case 3:
+            return "key";
         default:
             return "NotAColor";
     }

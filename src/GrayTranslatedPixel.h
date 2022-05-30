@@ -12,7 +12,7 @@ class GrayTranslatedPixel : public TranslatedPixel
         GrayTranslatedPixel(const Position & position, std::vector<Pixel> && pixels, const uint16_t steps, const float tileSizeMM);
         GrayTranslatedPixel();
 
-        float getTranslatedColorValue(const bitmap_image::color_plane color) const override;
+        float getTranslatedColorValue(const int color) const override;
         std::string toString() const override;
         //shadow pixel function
         size_t getColorArraySize() const override;

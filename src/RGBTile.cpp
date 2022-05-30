@@ -12,7 +12,7 @@ Tile(std::move(pixel))
 {
 }
 
-std::pair<std::vector<vertices>,std::vector<faces>> RGBTile::getOBJData(int & faceStartingNumber, const int color) const
+OBJData RGBTile::getOBJData(int & faceStartingNumber, const int color) const 
 {
     const size_t numberOfColors = m_translatedPixel->getColorArraySize();
     float bufferVal = Utils::getBufferOBJValue(m_tileSizeMM);

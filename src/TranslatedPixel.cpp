@@ -50,7 +50,7 @@ m_tileSizeMM(tileSizeMM)
     }
 }
 
-float TranslatedPixel::getTranslatedColorValue(const bitmap_image::color_plane color) const
+float TranslatedPixel::getTranslatedColorValue(const int color) const
 {
     return m_translatedColors[color];
 }

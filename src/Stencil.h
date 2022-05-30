@@ -4,7 +4,6 @@
 #include "OBJ.h"
 #include "Position.h"
 #include "Tile.h"
-#include <bitmap_image.hpp>
 #include <vector>
 
 class Stencil
@@ -15,7 +14,7 @@ class Stencil
                           bottom = 1
                       };
     public:
-        Stencil(std::vector<Tile> & tiles, const bitmap_image::color_plane color, const Stencil::stencilPlate type, const Position & bounds, const float tileSizeMM);
+        Stencil(std::vector<std::unique_ptr<Tile>> & tiles, const int color, const Stencil::stencilPlate type, const Position & bounds, const float tileSizeMM, const bool bufferStrips);
 
         void process();
         void output(const std::string outputFile, const std::string name = "");
@@ -28,11 +27,12 @@ class Stencil
         std::string stencilPlateToString(const Stencil::stencilPlate typeIn) const;
 
     private:
-        const std::vector<Tile> & m_tiles;
-        const bitmap_image::color_plane m_color;
+        const std::vector<std::unique_ptr<Tile>> & m_tiles;
+        const int m_color;
         const Position m_bounds;
         const float m_tileSizeMM;
         const Stencil::stencilPlate m_type;
+        const bool m_bufferStrips;
         std::vector<vertices> m_vertices;
         std::vector<faces> m_faces;
 };

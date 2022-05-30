@@ -7,13 +7,14 @@
 class TranslatedPixel : public Pixel
 {
 
-    typedef std::array<float, 3> Colors;
+    protected:
+        typedef std::array<float, 3> Colors;
 
     public:
         TranslatedPixel(const Position & position, std::vector<Pixel> && pixels, const uint16_t steps, const float tileSizeMM);
         TranslatedPixel();
 
-        virtual float getTranslatedColorValue(const bitmap_image::color_plane color) const;
+        virtual float getTranslatedColorValue(const int color) const;
         float getTileSizeMM() const;
         virtual std::string toString() const;
         uint16_t getSteps() const;
