@@ -10,8 +10,9 @@ class Position
         Position(const uint16_t x, const uint16_t y);
 
         uint16_t getX() const;
-        uint16_t getY() const; 
+        uint16_t getY() const;
         std::string toString() const;
+        void bump(const uint16_t value);
 
     private:
         uint16_t m_xPos;

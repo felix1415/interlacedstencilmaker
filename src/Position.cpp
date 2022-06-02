@@ -2,6 +2,7 @@
 
 #include "Position.h"
 #include <sstream>
+#include <iostream>
 
 Position::Position()
 {
@@ -29,3 +30,9 @@ std::string Position::toString() const
     ss << getX() << ", " << getY();
     return ss.str();
 }   
+
+void Position::bump(const uint16_t value)
+{
+    m_xPos += value;
+    m_yPos += value;
+}
