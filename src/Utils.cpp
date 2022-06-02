@@ -2,12 +2,22 @@
 
 #include "Utils.h"
 
-std::string Utils::colorToStringRGB(const int color)
+std::string Utils::colorToStringRGB(const bitmap_image::color_plane color)
 {
-    return colorToStringRGB((bitmap_image::color_plane)color);
+    switch(color)
+    {
+        case bitmap_image::color_plane::blue_plane:
+            return colorToStringRGB(2);
+        case bitmap_image::color_plane::green_plane:
+            return colorToStringRGB(1);
+        case bitmap_image::color_plane::red_plane:
+            return colorToStringRGB(0);
+        default:
+            return "NotAColor";
+    }
 }
 
-std::string Utils::colorToStringRGB(const bitmap_image::color_plane color)
+std::string Utils::colorToStringRGB(const int color)
 {
     switch(color)
     {
