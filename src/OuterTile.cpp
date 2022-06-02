@@ -14,7 +14,6 @@ m_endY(endY)
 
 OBJData OuterTile::getOBJData(int & faceStartingNumber, const int) const
 {
-    float bufferVal = Utils::getBufferOBJValue(m_tileSizeMM);
     std::vector<vertices> verticesVec;
     std::vector<faces> facesVec;
     verticesVec.reserve(8); // 8 vertices
@@ -22,10 +21,10 @@ OBJData OuterTile::getOBJData(int & faceStartingNumber, const int) const
     float xStart = 0.0f;
     float xEnd = (m_endX * m_tileSizeMM);
     float yStart = 0.0f;
-    float yEnd = (m_endY * m_tileSizeMM) + bufferVal;
+    float yEnd = (m_endY * m_tileSizeMM);
 
     //give the 0,0 tile a little notch so we know how to line up the final stencil
-    if(getX() == 0 and getY() == 0)
+    if(getX() == getY() and m_endX == m_endY)
     {
         yStart = m_tileSizeMM/2;
         xStart = m_tileSizeMM/2;
