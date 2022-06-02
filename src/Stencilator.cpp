@@ -80,7 +80,7 @@ int Stencilator::execute()
     int trueY = 0;
     int trueX = 0;
 
-    bounds = Position(4, 2);
+    // bounds = Position(4, 5);
     // bounds = Position(50, 50);
     const int xBoundary = bounds.getX();
     const int yBoundary = bounds.getY();
@@ -136,6 +136,11 @@ int Stencilator::execute()
 
 
     std::vector<Stencil> stencils;
+
+    for(auto & tile : tiles)
+    {
+        tile->bump(5);
+    }
 
     if(m_stencilType == StencilType::Type::cmyk)
     {
