@@ -8,7 +8,7 @@
 #include <sstream>
 
 Tile::Tile(std::unique_ptr<TranslatedPixel> && pixel):
-Position(pixel->getX() + 1, pixel->getY() + 1),
+Position(pixel->getX(), pixel->getY()), // THIS WILL CAUSE PROBLEMS - SOLVE IT
 m_translatedPixel(std::move(pixel)),
 m_tileSizeMM(m_translatedPixel->getTileSizeMM()),
 m_type(TileType::innerTile)
