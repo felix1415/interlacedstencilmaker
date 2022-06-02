@@ -13,6 +13,7 @@ class Stencil
                           top = 0,
                           bottom = 1
                       };
+            static const int BUMP_VALUE = 4;
     public:
         Stencil(std::vector<std::unique_ptr<Tile>> & tiles, const int color, const Stencil::stencilPlate type, const Position & bounds, const float tileSizeMM, const bool bufferStrips);
 
@@ -22,8 +23,10 @@ class Stencil
         std::string toString() const;
 
     private:
+        void generateBufferStrip(int & fsNumber);
         void generateOuterTiles(int & fsNumber);
-        void addBar(int & fsNumber, const int x, const int y, const int endX, const int endY);
+        void addBarOfWidth(int & fsNumber, const float x, const float y, const float endX, const float endY, const float width);
+        void addBar(int & fsNumber, const int x, const int y, const int endX, const int endY, const float width = 1.0f);
         std::string stencilPlateToString(const Stencil::stencilPlate typeIn) const;
 
     private:
