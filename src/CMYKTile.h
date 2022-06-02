@@ -15,12 +15,8 @@ class CMYKTile : public Tile
 
     private:
         OBJData generateOBJData(int & faceStartingNumber, const float xStart,  const float xEnd,  const float yStart,  const float yEnd) const;
-        OBJData getOBJDataHorizontal(int & faceStartingNumber, const int color) const;
-        OBJData getOBJDataVertical(int & faceStartingNumber, const int color) const;
 
     public:
         OBJData getOBJData(int & faceStartingNumber, const int color) const override;
         std::string toString() const;
-        std::string type() const override;
-        // virtual int numberOfColors() const;
 };

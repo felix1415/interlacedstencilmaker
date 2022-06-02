@@ -29,23 +29,19 @@ OBJData CMYKTile::generateOBJData(int & faceStartingNumber, const float xStart, 
     return std::make_pair(verticesVec, facesVec);
 }
 
-OBJData CMYKTile::getOBJDataHorizontal(int & faceStartingNumber, const int color) const
-{
-    float xStart = 0.0f;
-    float xEnd = 0.0f;
-    float yStart = 0.0f; 
-    float yEnd = 0.0f;
 
-    return generateOBJData(faceStartingNumber, xStart, xEnd, yStart, yEnd);
-}
-
-OBJData CMYKTile::getOBJDataVertical(int & faceStartingNumber, const int color) const
+OBJData CMYKTile::getOBJData(int & faceStartingNumber, const int color) const
 {
     float xStart = 0.0f;
     float xEnd = 0.0f;
     float yStart = 0.0f; 
     float yEnd = 0.0f;
     float bufferVal = Utils::getBufferOBJValue(m_tileSizeMM);
+
+    // if(m_tileSizeMM - m_translatedPixel->getTranslatedColorValue(color) < 0.1)
+    // {
+    //     bufferVal = 0.0f;
+    // }
 
     switch(color)
     {
@@ -54,58 +50,32 @@ OBJData CMYKTile::getOBJDataVertical(int & faceStartingNumber, const int color) 
             xStart = 0.0f;
             xEnd = m_tileSizeMM - m_translatedPixel->getTranslatedColorValue(color);
             yStart = 0.0f;
-            yEnd = m_tileSizeMM + bufferVal; 
+            yEnd = m_tileSizeMM; 
             break;
         case 1:
             //upper x, full y
             xStart = m_tileSizeMM - ((m_tileSizeMM) - (m_translatedPixel->getTranslatedColorValue(color))); 
-            xEnd = m_tileSizeMM + bufferVal;
+            xEnd = m_tileSizeMM;
             yStart = 0.0f; 
-            yEnd = m_tileSizeMM + bufferVal; 
+            yEnd = m_tileSizeMM; 
             break;
         case 2:
             //full x, bottom y
             xStart = 0.0f;
-            xEnd = m_tileSizeMM + bufferVal;
+            xEnd = m_tileSizeMM;
             yStart = 0.0f; 
-            yEnd = m_tileSizeMM - m_translatedPixel->getTranslatedColorValue(color);
+            yEnd = (m_tileSizeMM) - m_translatedPixel->getTranslatedColorValue(color);
             break;
         case 3:
             //full x, upper y
             xStart = 0.0f;
-            xEnd = m_tileSizeMM + bufferVal;
+            xEnd = m_tileSizeMM;
             yStart = m_tileSizeMM - ((m_tileSizeMM) - (m_translatedPixel->getTranslatedColorValue(color))); 
-            yEnd = m_tileSizeMM + bufferVal; 
+            yEnd = m_tileSizeMM; 
             break;
     }
 
-
-
     return generateOBJData(faceStartingNumber, xStart, xEnd, yStart, yEnd);
-}
-
-OBJData CMYKTile::getOBJData(int & faceStartingNumber, const int color) const
-{
-    OBJData verticals = getOBJDataVertical(faceStartingNumber, color);
-    return verticals;
-
-    /**
-        + - - - - - +
-        | X X X X X |
-        | - - - X X |
-        | - - - X X |
-        | - - - X X |
-        + - - - - - +
-    **/
-
-    // //4 colours 
-    // float xStart = 0.0f;
-    // float xEnd = m_tileSizeMM / 2;
-    // float yStart = 0.0f; // always 0, only end will change (pixel strength)
-    // float yEnd = 0.0f + bufferVal; // strength of color
-
-    // return generateOBJData(faceStartingNumber, xStart, xEnd, yStart, yEnd);
-    // return std::make_pair(verticesVec, facesVec);
 }
 
 std::string CMYKTile::toString() const
@@ -114,12 +84,3 @@ std::string CMYKTile::toString() const
     ss << "CMYKTile - x:" << getX() << " y:" << getY() << "\n" << m_translatedPixel->toString();
     return ss.str();
 }
-
-std::string CMYKTile::type() const
-{
-    return "CMYKTile";
-}
-// int CMYKTile::numberOfColors() const
-// {
-//     return m_translatedPixel->getColorArraySize();
-// }
