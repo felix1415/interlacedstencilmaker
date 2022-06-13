@@ -10,9 +10,15 @@
 
 float CMYKTranslatedPixel::calcColor(const int color, const float key) const
 {
-    //1 - 0.78 - 0.22 / 1 - 0.22
-    float color_der = std::max<float>(color, std::numeric_limits<float>::min())/255;
-    return ((1 - color_der) - key) / ( 1 - key);
+    float color_der = std::max<float>(color, std::numeric_limits<float>::min()) / 255;
+    color_der = std::max<float>(color_der, std::numeric_limits<float>::min());
+    float result =  ((1.0f - color_der) - key) / ( 1.0f - key);
+
+    {
+        // std::cout << "color_der: " << color_der << "  result: " << result << std::endl;
+    }
+   
+    return result;
 }
 
 float CMYKTranslatedPixel::calcKey(const int red, const int green, const int blue) const
@@ -40,16 +46,17 @@ m_translatedColors{0,0,0,0}
     for(size_t i = 0; i < accColours.size(); i++)
     {
         uint8_t numberOfPixels = m_pixels.size();
-        uint16_t accumaltiveValue = 0;
+        float accumaltiveValue = 0;
 
         //we're packing more than one pixel into a tile, find the 
         //accumaltive value of the pixels for this color
-        for(auto& pixel : m_pixels) 
+        Pixel p;
+        for(const auto & pixel : m_pixels)
         {
-            accumaltiveValue += pixel.getColorValue((bitmap_image::color_plane)i);
+            p += pixel;
         }
 
-        accColours[i] = accumaltiveValue / numberOfPixels;
+        accColours[i] = p.getColorValue((bitmap_image::color_plane)i);
     }
 
     //Translate RGB to CMYK
@@ -58,7 +65,6 @@ m_translatedColors{0,0,0,0}
     m_translatedColors[1] = calcColor(accColours[1], m_translatedColors[3]);
     m_translatedColors[2] = calcColor(accColours[2], m_translatedColors[3]);
 
-
     for(size_t i = 0; i < getColorArraySize(); i++)
     {
         // float calculatedStrengthValue = m_tileSizeMM * m_translatedColors[i];
@@ -66,14 +72,7 @@ m_translatedColors{0,0,0,0}
 
         float calculatedStrengthValue = (m_tileSizeMM/m_steps) * calculatedStepValue;
         m_translatedColors[i] = calculatedStrengthValue;
-        // std::cout << "m_translatedColors[i] i: " << i << " m_translatedColors[i]: " << m_translatedColors[i] << std::endl;
     }
-
-    std::cout << "cyan: " << m_translatedColors[0] << " (" << position.getX() << ", " << position.getY() << ")" << std::endl;
-    std::cout << "magenta: " << m_translatedColors[1] << " (" << position.getX() << ", " << position.getY() << ")" << std::endl;
-    std::cout << "yellow: " << m_translatedColors[2] << " (" << position.getX() << ", " << position.getY() << ")" << std::endl;
-    std::cout << "key: " << m_translatedColors[3] << " (" << position.getX() << ", " << position.getY() << ")" << std::endl;
-    std::cout << "" << std::endl;
 }
 
 std::string CMYKTranslatedPixel::toString() const
@@ -83,13 +82,10 @@ std::string CMYKTranslatedPixel::toString() const
     ss << "CMYK TP " << getX() << "," << getY() << " - ";
     for(size_t i = 0; i < m_translatedColors.size(); i++)
     {
-        ss << Utils::colorToStringCMYK(i) << ":"<< m_translatedColors[i] << " ";
+        ss << Utils::colorToStringCMYK(i) << ": "<< m_translatedColors[i] << " ";
     }
     ss << "\n";
-    for(const auto & pixel : m_pixels)
-    {
-        ss << "    " << pixel.toString() << "\n";
-    }
+
     return ss.str();
 }
 
