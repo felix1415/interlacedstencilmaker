@@ -19,6 +19,8 @@ class Pixel : public Position
         const Colors & getColorArray() const;
         std::string toString() const;
 
+        Pixel & operator+=(const Pixel& a);
+
     protected:
         const rgb_t & getColor() const;
         
@@ -28,4 +30,6 @@ class Pixel : public Position
     private:
         Colors m_colorArray;
         rgb_t m_color;
+        int m_pixelsRepresented = 0;
+        Colors m_acc = {0,0,0};
 };
