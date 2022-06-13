@@ -81,7 +81,7 @@ int Stencilator::execute()
     int trueX = 0;
 
     // bounds = Position(4, 5);
-    // bounds = Position(50, 50);
+    bounds = Position(50,50);
     const int xBoundary = bounds.getX();
     const int yBoundary = bounds.getY();
 
@@ -113,13 +113,6 @@ int Stencilator::execute()
                 tiles.emplace_back(std::unique_ptr<RGBTile>(new RGBTile(std::move(tp))));
             }
 
-
-            if(m_debug)
-            {
-                std::cout << tiles.back()->toString() << std::endl;
-            }
-
-
             imageX += pixelsPerAxis;
             trueX++;
         }
@@ -140,6 +133,10 @@ int Stencilator::execute()
     for(auto & tile : tiles)
     {
         tile->bump(5);
+        if(m_debug)
+        {
+            std::cout << tile->toString() << std::endl;
+        }
     }
 
     if(m_stencilType == StencilType::Type::cmyk)
