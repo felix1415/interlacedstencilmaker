@@ -53,3 +53,9 @@ float Utils::getBufferOBJValue(const float tileSizeMM)
 {
     return (tileSizeMM / LINE_OVERFLOW_BUFFER);
 }
+
+float Utils::floatCompare(const float a, const float b)
+{
+    float difference = std::abs(a - b);
+    return difference < EPSILON;
+}
