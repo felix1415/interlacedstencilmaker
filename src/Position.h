@@ -7,14 +7,14 @@ class Position
 {
     public:
         Position();
-        Position(const uint16_t x, const uint16_t y);
+        Position(const float x, const float y);
 
-        uint16_t getX() const;
-        uint16_t getY() const;
+        float getX() const;
+        float getY() const;
         std::string toString() const;
-        void bump(const uint16_t value);
+        void bump(const float value);
 
     private:
-        uint16_t m_xPos;
-        uint16_t m_yPos;
+        float m_xPos;
+        float m_yPos;
 };

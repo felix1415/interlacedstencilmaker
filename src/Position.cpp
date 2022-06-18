@@ -8,18 +8,18 @@ Position::Position()
 {
 }
 
-Position::Position(const uint16_t x, const uint16_t y):
+Position::Position(const float x, const float y):
 m_xPos(x),
 m_yPos(y)
 {
 }
 
-uint16_t Position::getX() const
+float Position::getX() const
 {
     return m_xPos; 
 }
 
-uint16_t Position::getY() const
+float Position::getY() const
 {
     return m_yPos; 
 }
@@ -31,7 +31,7 @@ std::string Position::toString() const
     return ss.str();
 }   
 
-void Position::bump(const uint16_t value)
+void Position::bump(const float value)
 {
     m_xPos += value;
     m_yPos += value;
