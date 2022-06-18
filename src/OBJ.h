@@ -2,11 +2,9 @@
 
 #pragma once
 
-#include <stdint.h>
 #include <string>
 #include <vector>
-#include <iostream>
-#include <fstream>
+
   
 struct vertices
 {
@@ -26,54 +24,17 @@ struct faces
 static const float STENCIL_THICKNESS = 0.6f;
 
 typedef std::pair<std::vector<vertices>,std::vector<faces>> OBJData;
-
+OBJData & operator+=(OBJData & a, const OBJData & b);
 
 class OBJ
 {
     public:
-        static void writeOBJFile(const std::string outputFile, const std::vector<vertices> vertices, const std::vector<faces> faces)
-        {
-            std::ofstream objFile;
+        static void writeOBJFile(const std::string outputFile, const std::vector<vertices> & vertices, const std::vector<faces> & faces);
 
-            std::remove(outputFile.c_str());
-
-            try
-            {
-                objFile.open (outputFile);
-                objFile << "# stencil export from https://github.com/felix1415/interlacedstencilmaker";
-                objFile << "\n";
-                objFile << "mtllib obj.mtl\n";
-                objFile << "\n";
-                objFile << "o obj_0\n";
-
-                for(const auto & vert : vertices)
-                {
-                    objFile << "v " << vert.p1 << "    " << vert.p2 << "    " << vert.p3 << "\n";
-                }
-                objFile << "# " << vertices.size() << " vertices\n";
-
-                objFile << "\n";
-                objFile << "g group_0_15277357\n";
-                objFile << "\n";
-                objFile << "usemtl color_15277357\n";
-                objFile << "s 0\n";
-                objFile << "\n";
-
-                for(const auto & face : faces)
-                {
-                    objFile << "f " << face.f1 << "    " << face.f2 << "    " << face.f3 << "    " << face.f4 << "\n";
-                }
-                objFile << "# " << faces.size() << " faces\n";
-
-                objFile << "# end of obj_0\n";
-                objFile.close();
-
-                std::cout << "Wrote " << outputFile << std::endl;
-            }
-            catch(...)
-            {
-                std::cout << "Error while writing OBJ file " << outputFile << std::endl;
-            }
-        }
-
+        //x : x location of Right angle C
+        //y : y location of Right angle C
+        //a : vertical to angle B, offset from x (length a)
+        //a : horizontal to angle A, offset from x (length b)
+        // https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Rtriangle.svg/330px-Rtriangle.svg.png
+        static std::vector<vertices> getTriangleVertices(float x, float y, float a, float b);
 };
