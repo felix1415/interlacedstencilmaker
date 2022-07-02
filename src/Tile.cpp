@@ -18,7 +18,7 @@ m_type(TileType::innerTile)
     //so that border tiles can fill their space
 }
 
-Tile::Tile(const uint16_t x, const uint16_t y, const float tileSizeMM):
+Tile::Tile(const float x, const float y, const float tileSizeMM):
 Position(x, y),
 m_tileSizeMM(tileSizeMM),
 m_type(TileType::borderTile)
@@ -123,6 +123,12 @@ OBJData Tile::getOBJData(int & faceStartingNumber, const int color) const
     return std::make_pair(verticesVec, facesVec);
 }
 
+OBJData Tile::addBlock(float xStart, float xEnd, float yStart, float yEnd, int & faceStartingNumber) const
+{
+    // std::cout << "ADDB "<< xStart << " " << xEnd << " " << yStart << " " << yEnd << std::endl;
+    return std::make_pair(getVertices(xStart, xEnd, yStart, yEnd), getFaces(faceStartingNumber));
+}
+
 std::vector<vertices> Tile::getVertices(float xStart, float xEnd, float yStart, float yEnd) const
 {
     float xVert = ((float)getX() * m_tileSizeMM);
@@ -179,6 +185,25 @@ std::vector<faces> Tile::getFaces(int & faceStartingNumber, const TileOptions) c
 
     return facesToReturn;
 }
+
+std::vector<faces> Tile::getTriangleFaces(int & faceStartingNumber) const
+{
+    std::vector<faces> facesToReturn;
+    facesToReturn.push_back({uint32_t(1+faceStartingNumber), uint32_t(2+faceStartingNumber), uint32_t(3+faceStartingNumber), 0});
+    facesToReturn.push_back({uint32_t(4+faceStartingNumber), uint32_t(5+faceStartingNumber), uint32_t(6+faceStartingNumber), 0});
+    facesToReturn.push_back({uint32_t(5+faceStartingNumber), uint32_t(1+faceStartingNumber), uint32_t(3+faceStartingNumber), 0});
+    facesToReturn.push_back({uint32_t(5+faceStartingNumber), uint32_t(3+faceStartingNumber), uint32_t(6+faceStartingNumber), 0});
+    facesToReturn.push_back({uint32_t(2+faceStartingNumber), uint32_t(1+faceStartingNumber), uint32_t(5+faceStartingNumber), 0});
+    facesToReturn.push_back({uint32_t(2+faceStartingNumber), uint32_t(5+faceStartingNumber), uint32_t(4+faceStartingNumber), 0});
+    facesToReturn.push_back({uint32_t(2+faceStartingNumber), uint32_t(4+faceStartingNumber), uint32_t(6+faceStartingNumber), 0});
+    facesToReturn.push_back({uint32_t(2+faceStartingNumber), uint32_t(6+faceStartingNumber), uint32_t(3+faceStartingNumber), 0});
+
+    faceStartingNumber += 6;
+
+    return facesToReturn;
+}
+
+
 
 std::string Tile::toString() const
 {

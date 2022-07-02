@@ -36,7 +36,7 @@ class Tile : public Position
         Tile(std::unique_ptr<TranslatedPixel> && pixel);
 
     protected: //outerTile
-        Tile(const uint16_t x, const uint16_t y, const float m_tileSizeMM);
+        Tile(const float x, const float y, const float m_tileSizeMM);
 
     public:
         //pixel functions we don't want, tiles are colour independent
@@ -49,6 +49,8 @@ class Tile : public Position
     protected:
         std::vector<vertices> getVertices(float xStart, float xEnd, float yStart, float yEnd) const;
         std::vector<faces> getFaces(int & faceStartingNumber, const TileOptions tileOptions = TileOptions::none) const;
+        std::vector<faces> getTriangleFaces(int & faceStartingNumber) const;
+        OBJData addBlock(float xStart, float xEnd, float yStart, float yEnd, int & faceStartingNumber) const;
 
     protected:
         std::unique_ptr<TranslatedPixel>  m_translatedPixel;
