@@ -9,8 +9,8 @@
 
 OBJData & operator+=(OBJData & a, const OBJData & b)
 {
-    a.first.insert(b.first.end(), b.first.begin(), b.first.end() );
-    a.second.insert(b.second.end(), b.second.begin(), b.second.end() );
+    a.first.insert(a.first.end(), b.first.begin(), b.first.end() );
+    a.second.insert(a.second.end(), b.second.begin(), b.second.end() );
     return a;
 }
 
@@ -45,7 +45,11 @@ void OBJ::writeOBJFile(const std::string outputFile, const std::vector<vertices>
 
         for(const auto & face : faces)
         {
-            objFile << "f " << face.f1 << "    " << face.f2 << "    " << face.f3 << "    " << face.f4 << "\n";
+            objFile << "f " << face.f1 << "    " << face.f2 << "    " << face.f3;
+            if(not face.f4 == 0)
+                objFile << "    " << face.f4 << "\n";
+            else //in the case of triangle, there's no 4th face
+                objFile << "\n";
         }
         objFile << "# " << faces.size() << " faces\n";
 
@@ -60,7 +64,7 @@ void OBJ::writeOBJFile(const std::string outputFile, const std::vector<vertices>
     }
 }
 
-static std::vector<vertices> getTriangleVertices(float x, float y, float a, float b)
+std::vector<vertices> OBJ::getTriangleVertices(float x, float y, float a, float b)
 {
     std::vector<vertices> verticesToReturn = {
         {x,         y,          0},

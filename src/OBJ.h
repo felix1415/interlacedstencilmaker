@@ -21,6 +21,15 @@ struct faces
   uint32_t   f4;
 };
 
+struct TriangleStats
+{
+    float a;
+    float b;
+    float c;
+    float area;
+    float angle;
+};
+
 static const float STENCIL_THICKNESS = 0.6f;
 
 typedef std::pair<std::vector<vertices>,std::vector<faces>> OBJData;
