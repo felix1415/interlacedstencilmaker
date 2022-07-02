@@ -125,7 +125,6 @@ OBJData Tile::getOBJData(int & faceStartingNumber, const int color) const
 
 OBJData Tile::addBlock(float xStart, float xEnd, float yStart, float yEnd, int & faceStartingNumber) const
 {
-    // std::cout << "ADDB "<< xStart << " " << xEnd << " " << yStart << " " << yEnd << std::endl;
     return std::make_pair(getVertices(xStart, xEnd, yStart, yEnd), getFaces(faceStartingNumber));
 }
 
