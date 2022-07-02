@@ -6,14 +6,14 @@
 class OuterTile : public Tile
 {
     public:
-        OuterTile(const uint16_t x, const uint16_t y, const uint16_t endX, const uint16_t endY, const float tileSizeMM);
+        OuterTile(const float x, const float y, const float endX, const float endY, const float tileSizeMM);
 
         OBJData getOBJData(int & faceStartingNumber, const int = 0) const override;
 
         std::string toString() const override;
 
     private:
-        const uint16_t m_endX;
-        const uint16_t m_endY;
+        const float m_endX;
+        const float m_endY;
 
 };

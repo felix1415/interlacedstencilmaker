@@ -4,7 +4,7 @@
 #include "Utils.h"
 #include <sstream>
 
-OuterTile::OuterTile(const uint16_t x, const uint16_t y, const uint16_t endX, const uint16_t endY, const float tileSizeMM):
+OuterTile::OuterTile(const float x, const float y, const float endX, const float endY, const float tileSizeMM):
 Tile(x, y, tileSizeMM),
 m_endX(endX),
 m_endY(endY)
@@ -24,7 +24,7 @@ OBJData OuterTile::getOBJData(int & faceStartingNumber, const int) const
     float yEnd = (m_endY * m_tileSizeMM);
 
     //give the 0,0 tile a little notch so we know how to line up the final stencil
-    if(getX() == getY() and m_endX == m_endY)
+    if(Utils::floatCompare(getX(), getY()) and Utils::floatCompare(m_endX, m_endY))
     {
         yStart = m_tileSizeMM/2;
         xStart = m_tileSizeMM/2;
