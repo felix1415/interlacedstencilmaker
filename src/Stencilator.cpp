@@ -81,7 +81,7 @@ int Stencilator::execute()
     int trueX = 0;
 
     // bounds = Position(4, 5);
-    bounds = Position(50,50);
+    // bounds = Position(50,50);
     const int xBoundary = bounds.getX();
     const int yBoundary = bounds.getY();
 
