@@ -45,9 +45,6 @@ m_translatedColors{0,0,0,0}
     TranslatedPixel::Colors accColours = {0.0f, 0.0f, 0.0f};
     for(size_t i = 0; i < accColours.size(); i++)
     {
-        uint8_t numberOfPixels = m_pixels.size();
-        float accumaltiveValue = 0;
-
         //we're packing more than one pixel into a tile, find the 
         //accumaltive value of the pixels for this color
         Pixel p;
@@ -98,4 +95,3 @@ size_t CMYKTranslatedPixel::getColorArraySize() const
 {
     return m_translatedColors.size();
 }
-
