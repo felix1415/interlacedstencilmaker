@@ -13,7 +13,8 @@ m_tileSizeMM(tileSizeMM),
 m_type(type),
 m_bufferStrips(bufferStrips)
 {
-    int xOuterTilesSize = ((m_bounds.getX() + 2) / 2) * ((m_bounds.getY() + 2) / 2);
+    int xBounds = m_bounds.getX();
+    int xOuterTilesSize = ((xBounds + 2) / 2) * ((xBounds + 2) / 2);
     m_vertices.reserve((INNER_TILE_VERTS * m_tiles.size()) + xOuterTilesSize); // 8 vertices * 3 colors
     m_faces.reserve((INNER_TILE_FACES * m_tiles.size()) + xOuterTilesSize);
 }
@@ -29,12 +30,13 @@ void Stencil::process()
 
     for(size_t i = 0; i < m_tiles.size(); i++)
     {
+        int y = m_tiles[i]->getY();
         OBJData tileData;
-        if(m_tiles[i]->getY() % 2 and (stencilPlate::top == m_type))
+        if(y % 2 and (stencilPlate::top == m_type))
         {
             tileData = m_tiles[i]->getOBJData(faceStartingNumber, m_color); // top is even tiles
         }
-        else if((not(m_tiles[i]->getY() % 2)) and (stencilPlate::bottom == m_type))
+        else if((not(y % 2)) and (stencilPlate::bottom == m_type))
         {
             tileData = m_tiles[i]->getOBJData(faceStartingNumber, m_color); //bottom is odd tiles
         }
@@ -49,8 +51,10 @@ void Stencil::generateBufferStrip(int & fsNumber)
 {
     const float width = 0.5f;
 
-    int yLength = m_bounds.getY() + (1 + (1 - ((m_bounds.getY() * m_type) % 2)) ) - ((1 - (m_bounds.getY() % 2)) * (1 - m_type));
-    int xLength = m_bounds.getX() + (m_bounds.getX() % 2) + 1; // this is static comparatively to y axis
+    int yBounds = m_bounds.getY();
+    int xBounds = m_bounds.getX();
+    int yLength = yBounds + (1 + (1 - ((yBounds * m_type) % 2)) ) - ((1 - (yBounds % 2)) * (1 - m_type));
+    int xLength = xBounds + (xBounds % 2) + 1; // this is static comparatively to y axis
 
     switch(m_color)
     {
@@ -76,8 +80,13 @@ void Stencil::generateOuterTiles(int & fsNumber)
 
     //we might be the tile without the last row of pixels, so we don't want 
     //to put an extra row of outertiles - it'll be unnecessary
-    int yLength = m_bounds.getY() + (1 + (1 - ((m_bounds.getY() * m_type) % 2)) ) - ((1 - (m_bounds.getY() % 2)) * (1 - m_type));
-    int xLength = m_bounds.getX() + (m_bounds.getX() % 2) + 1; // this is static comparatively to y axis
+    int yBounds = m_bounds.getY();
+    int xBounds = m_bounds.getX();
+    int yLength = yBounds + (1 + (1 - ((yBounds * m_type) % 2)) ) - ((1 - (yBounds % 2)) * (1 - m_type));
+    int xLength = xBounds + (xBounds % 2) + 1; // this is static comparatively to y axis
+
+    float upperBufferVal = 0;
+    float lowerBufferVal = 0;
 
     //we need to create horizontal lines inbetween each row of inner tiles
     for(int y = 0; y < yLength; y++)
@@ -89,8 +98,29 @@ void Stencil::generateOuterTiles(int & fsNumber)
             x = 1;
             xLengthNew -= 1;
         }
+
+        if(y == 1 or ((y == 0) and stencilPlate::top == m_type))
+        {
+            lowerBufferVal = Utils::getBufferOBJValue(m_tileSizeMM);
+        }
+        else if(y > 1 and not (y >= (yLength-1)))
+        {
+            lowerBufferVal = Utils::getBufferOBJValue(m_tileSizeMM);
+            upperBufferVal = Utils::getBufferOBJValue(m_tileSizeMM);
+        }
+        else if(y == (yLength-1))
+        {
+            lowerBufferVal = 0;
+        }
+
+        if(m_color == 0 or m_color == 3)
+        {
+            lowerBufferVal = 0;
+            upperBufferVal = 0;
+        }
+
         //y height will stay the same as tileSize, x is dependent on image width
-        OuterTile outerTile(x+4, y+4, xLengthNew, 1, m_tileSizeMM);
+        OuterTile outerTile(x+BUMP_VALUE, y+BUMP_VALUE + (upperBufferVal / m_tileSizeMM), xLengthNew, 1 - ((upperBufferVal + lowerBufferVal) / m_tileSizeMM), m_tileSizeMM);
         OBJData tileData;
 
         //we will do the same conditional as in process as we are 
@@ -113,10 +143,12 @@ void Stencil::generateOuterTiles(int & fsNumber)
         m_faces.insert(std::end(m_faces), std::begin(tileData.second), std::end(tileData.second));
     }
 
-    addBar(fsNumber, BUMP_VALUE+1, BUMP_VALUE, xLength, 1); //top of bottom stencil
+    //we only need to take the top off the top plate bar
+    lowerBufferVal = m_type ? 0 : Utils::getBufferOBJValue(m_tileSizeMM);
+
+    addBar(fsNumber, BUMP_VALUE+1, BUMP_VALUE, xLength, 1 - lowerBufferVal); //top of bottom stencil
     addBar(fsNumber, BUMP_VALUE, BUMP_VALUE, 1, 1); // positional notch
     addBar(fsNumber, BUMP_VALUE, BUMP_VALUE+1, 1, yLength - 1); //add left side y bar
-    // ((m_bounds.getY() % 2) + m_type) - 1
     addBar(fsNumber, xLength + BUMP_VALUE, BUMP_VALUE, 1, yLength); //add right side y bar
 }
 
