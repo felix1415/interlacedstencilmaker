@@ -34,11 +34,11 @@ void Stencil::process()
         OBJData tileData;
         if(y % 2 and (stencilPlate::top == m_type))
         {
-            tileData = m_tiles[i]->getOBJData(faceStartingNumber, m_color); // top is even tiles
+            tileData = m_tiles[i]->getOBJData(faceStartingNumber, m_color, m_type); // top is even tiles
         }
         else if((not(y % 2)) and (stencilPlate::bottom == m_type))
         {
-            tileData = m_tiles[i]->getOBJData(faceStartingNumber, m_color); //bottom is odd tiles
+            tileData = m_tiles[i]->getOBJData(faceStartingNumber, m_color, m_type); //bottom is odd tiles
         }
 
         m_vertices.insert(std::end(m_vertices), std::begin(tileData.first), std::end(tileData.first));
