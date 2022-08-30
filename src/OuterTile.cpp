@@ -12,7 +12,7 @@ m_endY(endY)
 }
 
 
-OBJData OuterTile::getOBJData(int & faceStartingNumber, const int) const
+OBJData OuterTile::getOBJData(int & faceStartingNumber, const int, const bool) const
 {
     std::vector<vertices> verticesVec;
     std::vector<faces> facesVec;

@@ -14,7 +14,7 @@ class RGBTile : public Tile
         RGBTile(std::unique_ptr<TranslatedPixel> && pixel);
 
     public:
-        OBJData getOBJData(int & faceStartingNumber, const int color) const override;
+        OBJData getOBJData(int & faceStartingNumber, const int color, const bool) const override;
         std::string toString() const;
         // virtual int numberOfColors() const;
 };

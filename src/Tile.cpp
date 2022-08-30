@@ -25,7 +25,7 @@ m_type(TileType::borderTile)
 {
 }
 
-OBJData Tile::getOBJData(int & faceStartingNumber, const int color) const
+OBJData Tile::getOBJData(int & faceStartingNumber, const int color, const bool /*plate*/) const
 {
     const size_t numberOfColors = m_translatedPixel->getColorArraySize();
     float bufferVal = Utils::getBufferOBJValue(m_tileSizeMM);

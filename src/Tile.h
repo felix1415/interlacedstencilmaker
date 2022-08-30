@@ -43,7 +43,7 @@ class Tile : public Position
         const rgb_t & getColor() const = delete;
         void calculateTranslatedColourValue() = delete;
 
-        virtual OBJData getOBJData(int & faceStartingNumber, const int color) const;
+        virtual OBJData getOBJData(int & faceStartingNumber, const int color, const bool plate = false) const;
         virtual std::string toString() const;
 
     protected:

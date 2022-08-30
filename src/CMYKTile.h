@@ -22,7 +22,7 @@ class CMYKTile : public Tile
         OBJData addBlockingShapes(int & faceStartingNumber, const uint16_t angle, const bool flip, const float areaToOpen) const;
 
     public:
-        OBJData getOBJData(int & faceStartingNumber, const int color) const override;
+        OBJData getOBJData(int & faceStartingNumber, const int color, const bool plate) const override;
         std::string toString() const;
 
     private:
