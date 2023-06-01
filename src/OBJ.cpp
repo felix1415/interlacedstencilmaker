@@ -70,8 +70,8 @@ std::vector<vertices> OBJ::getTriangleVertices(float x, float y, float a, float 
         {x,         y,          0},
         {x + b,     y,          0},
         {x,         y + a,      0},
-        {x,         y,          STENCIL_THICKNESS},
         {x + b,     y,          STENCIL_THICKNESS},
+        {x,         y,          STENCIL_THICKNESS},
         {x,         y + a,      STENCIL_THICKNESS},
     };
 

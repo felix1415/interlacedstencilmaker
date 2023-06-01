@@ -146,19 +146,15 @@ OBJData CMYKTile::getOBJData(int & faceStartingNumber, const int color, const bo
         case 0:
             //bottom x, full y
             //blocks bottom upwards
-            // xStart = 0.0f;
-            // xEnd = m_tileSizeMM;
-            // yStart = 0.0f - m_bufferVal; 
-            // yEnd = (m_tileSizeMM + m_bufferVal) - (m_translatedPixel->getTranslatedColorValue(color) + (m_bufferVal * (m_translatedPixel->getTranslatedColorValue(color)*m_tileSizeMM)));
-
+            
             xStart = 0.0f;
             xEnd = m_tileSizeMM;
-            yStart = 0.0f; 
+            yStart = 0.0f - m_bufferVal; 
             yEnd = (m_tileSizeMM) - m_translatedPixel->getTranslatedColorValue(color);
 
             if(plate)
             {
-                return addBlockingShapes(faceStartingNumber, 30, false, (m_tileSizeMM * m_translatedPixel->getTranslatedColorValue(color)) + m_bufferVal);
+                return addBlockingShapes(faceStartingNumber, 20, false, (m_tileSizeMM * m_translatedPixel->getTranslatedColorValue(color)) + m_bufferVal);
             }
 
             break;
@@ -166,12 +162,12 @@ OBJData CMYKTile::getOBJData(int & faceStartingNumber, const int color, const bo
 
             xStart = 0.0f;
             xEnd = m_tileSizeMM;
-            yStart = 0.0f; 
+            yStart = 0.0f - m_bufferVal; 
             yEnd = (m_tileSizeMM) - m_translatedPixel->getTranslatedColorValue(color);
 
             if(not plate)
             {
-                return addBlockingShapes(faceStartingNumber, 30, false, (m_tileSizeMM * m_translatedPixel->getTranslatedColorValue(color)) + m_bufferVal);
+                return addBlockingShapes(faceStartingNumber, 20, false, (m_tileSizeMM * m_translatedPixel->getTranslatedColorValue(color)) + m_bufferVal);
             }
 
             break;
@@ -180,23 +176,35 @@ OBJData CMYKTile::getOBJData(int & faceStartingNumber, const int color, const bo
             xEnd = m_tileSizeMM;
             yStart = (m_tileSizeMM - m_bufferVal) - (m_tileSizeMM - m_translatedPixel->getTranslatedColorValue(color));
             yEnd = m_tileSizeMM + m_bufferVal; 
+
+            // xStart = 0.0f;
+            // xEnd = m_tileSizeMM;
+            // yStart = 0.0f - m_bufferVal; 
+            // yEnd = (m_tileSizeMM) - m_translatedPixel->getTranslatedColorValue(color);
+            
             if(not plate)
             {
-                return addBlockingShapes(faceStartingNumber, 30, true, (m_tileSizeMM * m_translatedPixel->getTranslatedColorValue(color)) + m_bufferVal);
+                return addBlockingShapes(faceStartingNumber, 20, true, (m_tileSizeMM * m_translatedPixel->getTranslatedColorValue(color)) + m_bufferVal);
             }
 
             break;
         case 3:
             //full x, upper y
             //blocks top downwards
+        
             xStart = 0.0f;
             xEnd = m_tileSizeMM;
             yStart = (m_tileSizeMM - m_bufferVal) - (m_tileSizeMM - m_translatedPixel->getTranslatedColorValue(color));
             yEnd = m_tileSizeMM + m_bufferVal;
 
+            // xStart = 0.0f;
+            // xEnd = m_tileSizeMM;
+            // yStart = 0.0f - m_bufferVal; 
+            // yEnd = (m_tileSizeMM) - m_translatedPixel->getTranslatedColorValue(color);
+
             if(plate)
             {
-                return addBlockingShapes(faceStartingNumber, 30, true, (m_tileSizeMM * m_translatedPixel->getTranslatedColorValue(color)) + m_bufferVal);
+                return addBlockingShapes(faceStartingNumber, 20, true, (m_tileSizeMM * m_translatedPixel->getTranslatedColorValue(color)) + m_bufferVal);
             }
             break;
     }
