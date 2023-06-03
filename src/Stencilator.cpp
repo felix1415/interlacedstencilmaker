@@ -4,7 +4,6 @@
 #include "Tile.h"
 #include "RGBTile.h"
 #include "CMYKTile.h"
-#include "WRGBTranslatedPixel.h"
 #include "GrayTranslatedPixel.h"
 #include "CMYKTranslatedPixel.h"
 #include "Position.h"
@@ -96,11 +95,6 @@ int Stencilator::execute()
             if(m_stencilType == StencilType::Type::grayscale)
             {
                 tp = std::unique_ptr<GrayTranslatedPixel>(new GrayTranslatedPixel(Position(trueX, trueY), std::move(pixels), steps, tileSizeMM));
-                tiles.emplace_back(std::unique_ptr<RGBTile>(new RGBTile(std::move(tp))));
-            }
-            else if(m_stencilType == StencilType::Type::wrgb)
-            {
-                tp = std::unique_ptr<WRGBTranslatedPixel>(new WRGBTranslatedPixel(Position(trueX, trueY), std::move(pixels), steps, tileSizeMM));
                 tiles.emplace_back(std::unique_ptr<RGBTile>(new RGBTile(std::move(tp))));
             }
             else if(m_stencilType == StencilType::Type::cmyk)

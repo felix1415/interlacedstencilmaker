@@ -37,8 +37,6 @@ Usage:
   -d, --debug       Debugging mode
   -g, --grayscale   Generate grayscale stencil instead of an RGB collection
                     of stencils
-  -w, --wrgb        Generate an RGB set of stencils to complement the
-                    grayscale
   -W, --width arg   Width of image
   -H, --height arg  Height of image
   -i, --input arg   Input file

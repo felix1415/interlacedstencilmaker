@@ -16,11 +16,6 @@ namespace StencilType
             return StencilType::Type::rgb;
         }
 
-        if(pr.count("wrgb"))
-        {
-            return StencilType::Type::wrgb;
-        }
-
         if(pr.count("cmyk"))
         {
             return StencilType::Type::cmyk;
