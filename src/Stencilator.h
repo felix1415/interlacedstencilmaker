@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-static const Stencil::stencilPlate plates[] = { Stencil::stencilPlate::top, Stencil::stencilPlate::bottom };
+typedef std::vector<std::unique_ptr<Tile>> Tiles;
 
 class Stencilator
 {
@@ -21,6 +21,8 @@ class Stencilator
         uint16_t calculateSteps(const float tileSizeMM);
         std::tuple<float, int, Position> calculateTileGeometries(const bitmap_image & image);
         std::vector<Pixel> getPixels(const int pixelsPerSlot, const bitmap_image & image, int x, int y);
+
+        void generateStencil(const Tiles & tiles, const int color, const Stencil::stencilPlate plate, const Position & bounds, const float tileSizeMM, const bool bufferStrips,const std::string name);
 
     private:
         const uint16_t m_plateWidth;

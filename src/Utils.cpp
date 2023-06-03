@@ -2,7 +2,7 @@
 
 #include "Utils.h"
 
-std::string Utils::colorToStringRGB(const bitmap_image::color_plane color)
+std::string Utils::colorPlaneToStringRGB(const bitmap_image::color_plane color)
 {
     switch(color)
     {
@@ -30,6 +30,15 @@ std::string Utils::colorToStringRGB(const int color)
         default:
             return "NotAColor";
     }
+}
+
+std::string Utils::colorToStringGrayscale(const int color)
+{
+    if (color != 1)
+    {
+        throw std::runtime_error("a color other than 1 was passed to colorToStringGrayscale");
+    }
+    return "grayscale";
 }
 
 std::string Utils::colorToStringCMYK(const int color)

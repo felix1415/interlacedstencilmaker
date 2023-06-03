@@ -15,7 +15,7 @@ class Stencil
                       };
             static const int BUMP_VALUE = 4;
     public:
-        Stencil(std::vector<std::unique_ptr<Tile>> & tiles, const int color, const Stencil::stencilPlate type, const Position & bounds, const float tileSizeMM, const bool bufferStrips);
+        Stencil(const std::vector<std::unique_ptr<Tile>> & tiles, const int color, const Stencil::stencilPlate type, const Position & bounds, const float tileSizeMM, const bool bufferStrips);
 
         void process();
         void output(const std::string outputFile, const std::string name = "");
@@ -39,3 +39,5 @@ class Stencil
         std::vector<vertices> m_vertices;
         std::vector<faces> m_faces;
 };
+
+static const Stencil::stencilPlate plates[] = { Stencil::stencilPlate::top, Stencil::stencilPlate::bottom };

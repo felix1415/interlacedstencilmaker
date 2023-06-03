@@ -5,7 +5,7 @@
 #include "OuterTile.h"
 #include "Utils.h"
 
-Stencil::Stencil(std::vector<std::unique_ptr<Tile>> & tiles, const int color, const Stencil::stencilPlate type, const Position & bounds, const float tileSizeMM, const bool bufferStrips):
+Stencil::Stencil(const std::vector<std::unique_ptr<Tile>> & tiles, const int color, const Stencil::stencilPlate type, const Position & bounds, const float tileSizeMM, const bool bufferStrips):
 m_tiles(tiles),
 m_color(color),
 m_bounds(bounds),
@@ -169,10 +169,7 @@ void Stencil::addBarOfWidth(int & fsNumber, const float x, const float y, const 
 void Stencil::output(const std::string outputFile, const std::string name)
 {
     std::ostringstream ss;
-    if(name.compare(""))
-        ss << outputFile << "_" << stencilPlateToString(m_type) << "_" << name << ".obj";
-    else
-        ss << outputFile << "_" << stencilPlateToString(m_type) << "_" << Utils::colorToStringRGB(m_color) << ".obj";
+    ss << outputFile << "_" << stencilPlateToString(m_type) << "_" << name << ".obj";
 
     OBJ::writeOBJFile(ss.str(), m_vertices, m_faces);
 }

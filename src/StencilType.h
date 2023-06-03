@@ -16,4 +16,6 @@ namespace StencilType
     static const Type All[] = { grayscale, rgb, wrgb, cmyk};
 
     Type getType(const cxxopts::ParseResult & pr);
+    int numberOfColors(const Type type);
+    std::function<std::string(int)>  colorNameFunction(const Type type);
 }

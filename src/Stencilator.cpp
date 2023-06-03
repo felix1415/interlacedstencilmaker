@@ -144,77 +144,34 @@ int Stencilator::execute()
         }
     }
 
-    if(m_stencilType == StencilType::Type::cmyk)
+    int numberOfColors = StencilType::numberOfColors(m_stencilType);
+    bool addBufferStrips = (m_stencilType == StencilType::Type::cmyk);
+
+    for(int color=0; color < numberOfColors; color++)
     {
-        for(int color=0; color < 4; color++)
+        for(const auto plate : plates)
         {
-            {
-                Stencil stencil(tiles, color, Stencil::stencilPlate::top, bounds, tileSizeMM, true);
-                stencil.process();
-                stencil.output(m_outputFile, Utils::colorToStringCMYK(color));
-            }
-            {
-                Stencil stencil(tiles, color, Stencil::stencilPlate::bottom, bounds, tileSizeMM, true);
-                stencil.process();
-                stencil.output(m_outputFile, Utils::colorToStringCMYK(color));
-            }
+            generateStencil(tiles, color, plate, bounds, tileSizeMM, addBufferStrips, StencilType::colorNameFunction(m_stencilType)(color));
         }
-    }
-
-    
-    if(m_stencilType == StencilType::Type::grayscale or m_stencilType == StencilType::Type::rgb)
-    {
-
-        if(m_debug)
-            std::cout << "Generating grayscale stencils" << std::endl;
-        {
-            Stencil stencil(tiles, bitmap_image::color_plane::blue_plane, Stencil::stencilPlate::top, bounds, tileSizeMM, false);
-            stencil.process();
-            stencil.output(m_outputFile, "grayscale");
-        }
-
-        {
-            Stencil stencil(tiles, bitmap_image::color_plane::blue_plane, Stencil::stencilPlate::bottom, bounds, tileSizeMM, false);
-            stencil.process();
-            stencil.output(m_outputFile, "grayscale");
-        }
-    }
-    
-    if(m_stencilType == StencilType::Type::rgb or m_stencilType == StencilType::Type::wrgb)
-    {
-        std::cout << "Generating rgb stencils" << std::endl;
-
-
-        for(int color=0; color <= bitmap_image::color_plane::red_plane; color++)
-        {
-            std::cout << "Generating rgb stencils" << std::endl;
-            std::cout << color << std::endl;
-            for(const auto plate : plates)
-            {
-                Stencil stencil(tiles, (bitmap_image::color_plane)color, plate, bounds, tileSizeMM, false);
-                stencils.push_back(stencil);
-                if(m_debug)
-                {
-                    printf("%s\n", stencil.toString().c_str());
-                }
-            }
-        }
-
-        stencils[0].process();
-        stencils[0].output(m_outputFile);
-        stencils[1].process();
-        stencils[1].output(m_outputFile);
-        stencils[2].process();
-        stencils[2].output(m_outputFile);
-        stencils[3].process();
-        stencils[3].output(m_outputFile);
-        stencils[4].process();
-        stencils[4].output(m_outputFile);
-        stencils[5].process();
-        stencils[5].output(m_outputFile);
     }
 
     return 0;
+}
+
+//generateTiles
+// Tiles
+
+void Stencilator::generateStencil(const Tiles & tiles, 
+                                  const int color, 
+                                  const Stencil::stencilPlate plate, 
+                                  const Position & bounds, 
+                                  const float tileSizeMM, 
+                                  const bool bufferStrips,
+                                  const std::string name)
+{
+    Stencil stencil(tiles, color, plate, bounds, tileSizeMM, bufferStrips);
+    stencil.process();
+    stencil.output(m_outputFile, name);
 }
 
 std::vector<Pixel> Stencilator::getPixels(const int pixelsPerTile, const bitmap_image & image, int x, int y)
