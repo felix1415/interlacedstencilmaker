@@ -94,12 +94,15 @@ int Stencilator::execute()
             {
                 case StencilType::Type::grayscale:
                     generateTiles<RGBTile, GrayTranslatedPixel>(tiles, std::move(pixels), trueX, trueY, steps, tileSizeMM);
-
+                    break;
                 case StencilType::Type::cmyk:
                     generateTiles<CMYKTile, CMYKTranslatedPixel>(tiles, std::move(pixels), trueX, trueY, steps, tileSizeMM);
-                    
+                    break;
                 case StencilType::Type::rgb:
                     generateTiles<RGBTile, TranslatedPixel>(tiles, std::move(pixels), trueX, trueY, steps, tileSizeMM);
+                    break;
+                default:
+                    break;
             }
 
             imageX += pixelsPerAxis;
@@ -147,11 +150,11 @@ int Stencilator::execute()
 }
 
 template <class T, class P>
-Tiles Stencilator::generateTiles(Tiles & tiles, P && pixels, const int x, const int y, const int steps, const float tileSizeMM) const
+void Stencilator::generateTiles(Tiles & tiles, std::vector<Pixel> && pixels, const int x, const int y, const int steps, const float tileSizeMM) const
 {
+    // std::cout << "test" << std::endl;
     std::unique_ptr<TranslatedPixel> tp = std::unique_ptr<P>(new P(Position(x, y), std::move(pixels), steps, tileSizeMM));
-    tiles.emplace_back(std::unique_ptr<RGBTile>(new T(std::move(tp))));
-    return tiles;
+    tiles.emplace_back(std::unique_ptr<T>(new T(std::move(tp))));
 }
 
 void Stencilator::generateStencil(const Tiles & tiles, 
