@@ -59,7 +59,7 @@ void Stencil::generateBufferStrip(int & fsNumber)
     switch(m_color)
     {
         case 0:
-            addBarOfWidth(fsNumber, BUMP_VALUE + 1, BUMP_VALUE - 0.5, xLength, 1, width); //top of stencil
+            addBarOfWidth(fsNumber, BUMP_VALUE + 1, BUMP_VALUE , xLength -1, 1, width); //top of stencil
             break;
         case 1:
             addBarOfWidth(fsNumber, BUMP_VALUE, 3.5 + yLength, xLength + 1, 1, width); //bottom of stencil
@@ -146,10 +146,10 @@ void Stencil::generateOuterTiles(int & fsNumber)
     //we only need to take the top off the top plate bar
     lowerBufferVal = m_type ? 0 : Utils::getBufferOBJValue(m_tileSizeMM);
 
-    addBar(fsNumber, BUMP_VALUE+1, BUMP_VALUE, xLength, 1 - lowerBufferVal); //top of bottom stencil
+    addBar(fsNumber, BUMP_VALUE+1, BUMP_VALUE, xLength -(xBounds % 2), 1 - lowerBufferVal); //top of bottom stencil
     addBar(fsNumber, BUMP_VALUE, BUMP_VALUE, 1, 1); // positional notch
     addBar(fsNumber, BUMP_VALUE, BUMP_VALUE+1, 1, yLength - 1); //add left side y bar
-    addBar(fsNumber, xLength + BUMP_VALUE, BUMP_VALUE, 1, yLength); //add right side y bar
+    addBar(fsNumber, xLength + BUMP_VALUE - (xBounds % 2), BUMP_VALUE, 1, yLength); //add right side y bar
 }
 
 void Stencil::addBar(int & fsNumber, const int x, const int y, const int endX, const int endY, const float width)
