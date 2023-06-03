@@ -18,7 +18,8 @@ int App::run(int argc, char * argv[])
     try
     {
         options.add_options()
-          ("d,debug", "Debugging mode", cxxopts::value<bool>()->default_value("false"))
+          ("D,debug", "Debugging mode", cxxopts::value<bool>()->default_value("false"))
+          ("I,info", "Info mode", cxxopts::value<bool>()->default_value("false"))
           ("g,grayscale", "Generate grayscale stencil instead of an RGB collection of stencils", cxxopts::value<bool>()->default_value("false"))
           ("r,rgb", "Generate an RGB set of stencils and grayscale", cxxopts::value<bool>()->default_value("false"))
           ("w,wrgb", "Generate an RGB set of stencils to complement the grayscale", cxxopts::value<bool>()->default_value("false"))
@@ -70,6 +71,7 @@ int App::run(int argc, char * argv[])
                    result["height"].as<uint16_t>(), 
                    result["input"].as<std::string>(),
                    result["output"].as<std::string>(),
+                   result["info"].as<bool>(),
                    result["debug"].as<bool>(),
                    stencilType
                    ).execute();

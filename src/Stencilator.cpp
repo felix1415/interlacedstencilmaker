@@ -15,12 +15,13 @@
 #include <memory>
 
 
-Stencilator::Stencilator(const uint16_t width, const uint16_t height, const std::string &inputFile, const std::string & outputFile, const bool debug, const StencilType::Type stencilType):
+Stencilator::Stencilator(const uint16_t width, const uint16_t height, const std::string &inputFile, const std::string & outputFile, const bool info, const bool debug, const StencilType::Type stencilType):
 m_plateWidth(width),
 m_plateHeight(height),
 m_minimumTileSize(1.5f),
 m_inputFile(inputFile),
 m_outputFile(outputFile),
+m_info(info),
 m_debug(debug),
 m_stencilType(stencilType)
 {
@@ -123,9 +124,13 @@ int Stencilator::execute()
         trueY++;
     }
 
-    // std::cout << "imageX: " << imageX << " imageY: " << imageY << std::endl;
-    // std::cout << "trueX " << trueX << "trueY " << trueY << std::endl;
-    // std::cout << "xBoundary " << xBoundary << "yBoundary " << yBoundary << std::endl;
+
+    if(m_info)
+    {
+        std::cout << "imageX: " << imageX << " imageY: " << imageY << std::endl;
+        std::cout << "trueX " << trueX << "trueY " << trueY << std::endl;
+        std::cout << "xBoundary " << xBoundary << "yBoundary " << yBoundary << std::endl;
+    }
 
 
     std::vector<Stencil> stencils;
