@@ -82,30 +82,24 @@ int Stencilator::execute()
 
     // bounds = Position(4, 5);
     // bounds = Position(50,50);
-    const int xBoundary = bounds.getX();
-    const int yBoundary = bounds.getY();
 
-    while(trueY < yBoundary)
+    while(trueY < bounds.getY())
     {
-        while(trueX < xBoundary)
+        while(trueX < bounds.getX())
         {
             std::vector<Pixel> pixels = getPixels(pixelsPerTile, image, imageX, imageY);
             std::unique_ptr<TranslatedPixel> tp;
 
-            if(m_stencilType == StencilType::Type::grayscale)
+            switch(m_stencilType)
             {
-                tp = std::unique_ptr<GrayTranslatedPixel>(new GrayTranslatedPixel(Position(trueX, trueY), std::move(pixels), steps, tileSizeMM));
-                tiles.emplace_back(std::unique_ptr<RGBTile>(new RGBTile(std::move(tp))));
-            }
-            else if(m_stencilType == StencilType::Type::cmyk)
-            {
-                tp = std::unique_ptr<CMYKTranslatedPixel>(new CMYKTranslatedPixel(Position(trueX, trueY), std::move(pixels), steps, tileSizeMM));
-                tiles.emplace_back(std::unique_ptr<CMYKTile>(new CMYKTile(std::move(tp))));
-            }
-            else if(m_stencilType == StencilType::Type::rgb)
-            {
-                tp = std::unique_ptr<TranslatedPixel>(new TranslatedPixel(Position(trueX, trueY), std::move(pixels), steps, tileSizeMM));
-                tiles.emplace_back(std::unique_ptr<RGBTile>(new RGBTile(std::move(tp))));
+                case StencilType::Type::grayscale:
+                    generateTiles<RGBTile, GrayTranslatedPixel>(tiles, std::move(pixels), trueX, trueY, steps, tileSizeMM);
+
+                case StencilType::Type::cmyk:
+                    generateTiles<CMYKTile, CMYKTranslatedPixel>(tiles, std::move(pixels), trueX, trueY, steps, tileSizeMM);
+                    
+                case StencilType::Type::rgb:
+                    generateTiles<RGBTile, TranslatedPixel>(tiles, std::move(pixels), trueX, trueY, steps, tileSizeMM);
             }
 
             imageX += pixelsPerAxis;
@@ -123,7 +117,7 @@ int Stencilator::execute()
     {
         std::cout << "imageX: " << imageX << " imageY: " << imageY << std::endl;
         std::cout << "trueX " << trueX << "trueY " << trueY << std::endl;
-        std::cout << "xBoundary " << xBoundary << "yBoundary " << yBoundary << std::endl;
+        std::cout << "xBoundary " << bounds.getX() << "yBoundary " << bounds.getY() << std::endl;
     }
 
 
@@ -152,8 +146,13 @@ int Stencilator::execute()
     return 0;
 }
 
-//generateTiles
-// Tiles
+template <class T, class P>
+Tiles Stencilator::generateTiles(Tiles & tiles, P && pixels, const int x, const int y, const int steps, const float tileSizeMM) const
+{
+    std::unique_ptr<TranslatedPixel> tp = std::unique_ptr<P>(new P(Position(x, y), std::move(pixels), steps, tileSizeMM));
+    tiles.emplace_back(std::unique_ptr<RGBTile>(new T(std::move(tp))));
+    return tiles;
+}
 
 void Stencilator::generateStencil(const Tiles & tiles, 
                                   const int color, 

@@ -22,6 +22,8 @@ class Stencilator
         std::tuple<float, int, Position> calculateTileGeometries(const bitmap_image & image);
         std::vector<Pixel> getPixels(const int pixelsPerSlot, const bitmap_image & image, int x, int y);
 
+        template <class T, class P>
+        Tiles generateTiles(Tiles & tiles, P && pixels, const int x, const int y, const int steps, const float tileSizeMM) const;
         void generateStencil(const Tiles & tiles, const int color, const Stencil::stencilPlate plate, const Position & bounds, const float tileSizeMM, const bool bufferStrips,const std::string name);
 
     private:
