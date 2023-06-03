@@ -14,7 +14,7 @@ static const Stencil::stencilPlate plates[] = { Stencil::stencilPlate::top, Sten
 class Stencilator
 {
     public:
-        Stencilator(const uint16_t width, const uint16_t height, const std::string &inputFile, const std::string & outputFile, const bool debug, const StencilType::Type stencilType);
+        Stencilator(const uint16_t width, const uint16_t height, const std::string &inputFile, const std::string & outputFile, const bool info, const bool debug, const StencilType::Type stencilType);
         int execute();
 
     private:
@@ -28,6 +28,7 @@ class Stencilator
         const float m_minimumTileSize;
         const std::string m_inputFile;
         const std::string m_outputFile;
+        const bool m_info;
         const bool m_debug;
         const StencilType::Type m_stencilType;
 };
