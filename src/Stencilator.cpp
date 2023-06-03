@@ -152,7 +152,6 @@ int Stencilator::execute()
 template <class T, class P>
 void Stencilator::generateTiles(Tiles & tiles, std::vector<Pixel> && pixels, const int x, const int y, const int steps, const float tileSizeMM) const
 {
-    // std::cout << "test" << std::endl;
     std::unique_ptr<TranslatedPixel> tp = std::unique_ptr<P>(new P(Position(x, y), std::move(pixels), steps, tileSizeMM));
     tiles.emplace_back(std::unique_ptr<T>(new T(std::move(tp))));
 }
@@ -220,7 +219,7 @@ std::tuple<float, int, Position> Stencilator::calculateTileGeometries(const bitm
 
         if(tileSizeMM < m_minimumTileSize)
         {
-            printf("calculated tile width is less nozzle width. tile: %f nozzle %f\n",tileSizeMM, m_minimumTileSize);
+            printf("calculated tile width is less than nozzle width. tile: %f nozzle %f\n",tileSizeMM, m_minimumTileSize);
             //+1 * new value 1 -> 4 -> 9
             pixelsPerTile = sqrt(pixelsPerTile) + 1;
             pixelsPerTile *= pixelsPerTile;
