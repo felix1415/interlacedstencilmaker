@@ -70,7 +70,24 @@ OBJData CMYKTile::addRectangle(int & faceStartingNumber, const float area, const
     return objd;
 }
 
-OBJData CMYKTile::addBlockingShapes(int & faceStartingNumber, const uint16_t angle, const bool flip, const float areaToOpen) const
+OBJData CMYKTile::addBlockingShapesBlocks(int & faceStartingNumber, const bool flip, const float areaToOpen) const
+{
+    float areaBlockable = m_tileSizeMM * (m_tileSizeMM + (m_bufferVal * 2));
+    OBJData objDataAcc; // accumalate the obj data as we add more shapes
+
+    float areaToBlock = areaBlockable - areaToOpen;
+    float width = areaToBlock / m_tileSizeMM;
+
+
+    if(flip)
+        objDataAcc += addBlock(0, width, 0  - m_bufferVal, m_tileSizeMM + m_bufferVal, faceStartingNumber);
+    else
+        objDataAcc += addBlock(m_tileSizeMM, m_tileSizeMM - width, 0 - m_bufferVal, m_tileSizeMM + m_bufferVal, faceStartingNumber);
+
+    return objDataAcc;
+}
+
+OBJData CMYKTile::addBlockingShapesTriangles(int & faceStartingNumber, const uint16_t angle, const bool flip, const float areaToOpen) const
 {
     //blocking shapes angle a pixel on rotation of the pixel, we want to workout 
     //the area we want open will be the gap for the pixel, we there for need to 
@@ -154,7 +171,8 @@ OBJData CMYKTile::getOBJData(int & faceStartingNumber, const int color, const bo
 
             if(plate)
             {
-                return addBlockingShapes(faceStartingNumber, 20, false, (m_tileSizeMM * m_translatedPixel->getTranslatedColorValue(color)) + m_bufferVal);
+                return addBlockingShapesBlocks(faceStartingNumber, false, (m_tileSizeMM * m_translatedPixel->getTranslatedColorValue(color)) + m_bufferVal);
+                // return addBlockingShapes(faceStartingNumber, 20, false, (m_tileSizeMM * m_translatedPixel->getTranslatedColorValue(color)) + m_bufferVal);
             }
 
             break;
@@ -167,7 +185,8 @@ OBJData CMYKTile::getOBJData(int & faceStartingNumber, const int color, const bo
 
             if(not plate)
             {
-                return addBlockingShapes(faceStartingNumber, 20, false, (m_tileSizeMM * m_translatedPixel->getTranslatedColorValue(color)) + m_bufferVal);
+                return addBlockingShapesBlocks(faceStartingNumber, false, (m_tileSizeMM * m_translatedPixel->getTranslatedColorValue(color)) + m_bufferVal);
+                // return addBlockingShapes(faceStartingNumber, 20, false, (m_tileSizeMM * m_translatedPixel->getTranslatedColorValue(color)) + m_bufferVal);
             }
 
             break;
@@ -184,7 +203,8 @@ OBJData CMYKTile::getOBJData(int & faceStartingNumber, const int color, const bo
             
             if(not plate)
             {
-                return addBlockingShapes(faceStartingNumber, 20, true, (m_tileSizeMM * m_translatedPixel->getTranslatedColorValue(color)) + m_bufferVal);
+                return addBlockingShapesBlocks(faceStartingNumber, true, (m_tileSizeMM * m_translatedPixel->getTranslatedColorValue(color)) + m_bufferVal);
+                // return addBlockingShapes(faceStartingNumber, 20, true, (m_tileSizeMM * m_translatedPixel->getTranslatedColorValue(color)) + m_bufferVal);
             }
 
             break;
@@ -204,7 +224,8 @@ OBJData CMYKTile::getOBJData(int & faceStartingNumber, const int color, const bo
 
             if(plate)
             {
-                return addBlockingShapes(faceStartingNumber, 20, true, (m_tileSizeMM * m_translatedPixel->getTranslatedColorValue(color)) + m_bufferVal);
+                return addBlockingShapesBlocks(faceStartingNumber, true, (m_tileSizeMM * m_translatedPixel->getTranslatedColorValue(color)) + m_bufferVal);
+                // return addBlockingShapes(faceStartingNumber, 20, true, (m_tileSizeMM * m_translatedPixel->getTranslatedColorValue(color)) + m_bufferVal);
             }
             break;
     }

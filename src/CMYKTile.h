@@ -19,7 +19,8 @@ class CMYKTile : public Tile
         void getStatsOfTriangle(TriangleStats & stats) const;
         OBJData addRectangle(int & faceStartingNumber, const float area, const float y) const;
         OBJData addRTriangle(int & faceStartingNumber, const float b, const uint16_t angle, const float yValue, const bool flip, const int aDirection) const;
-        OBJData addBlockingShapes(int & faceStartingNumber, const uint16_t angle, const bool flip, const float areaToOpen) const;
+        OBJData addBlockingShapesTriangles(int & faceStartingNumber, const uint16_t angle, const bool flip, const float areaToOpen) const;
+        OBJData addBlockingShapesBlocks(int & faceStartingNumber, const bool flip, const float areaToOpen) const;
 
     public:
         OBJData getOBJData(int & faceStartingNumber, const int color, const bool plate) const override;
